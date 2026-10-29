@@ -1,0 +1,84 @@
+(function () {
+    // 1. Get saved theme or default to 'normal'
+    let currentTheme = localStorage.getItem('site-theme') || 'normal';
+
+    // 2. Inject dynamic styles based on theme
+    function applyTheme() {
+        // Remove existing theme style if any
+        const existing = document.getElementById('dynamic-theme-style');
+        if (existing) existing.remove();
+
+        if (currentTheme !== 'normal') {
+            const style = document.createElement('style');
+            style.id = 'dynamic-theme-style';
+            let css = '';
+
+            if (currentTheme === 'dark') {
+                // Dark mode via inversion (0.9 makes it dark slate instead of pure black)
+                css = `
+                    html {
+                        filter: invert(0.9) hue-rotate(180deg);
+                    }
+                    /* Re-invert media and elements that already have balanced dark tones */
+                    img, video, iframe, pre, .bg-slate-900, .bg-slate-800, .bg-darker, .bg-dark, .no-invert {
+                        filter: invert(1) hue-rotate(180deg);
+                    }
+                `;
+            } else if (currentTheme === 'reading') {
+                // Reading mode via sepia and slightly reduced brightness
+                css = `
+                    html {
+                        filter: sepia(0.5) brightness(0.95);
+                    }
+                `;
+            }
+
+            style.textContent = css;
+            document.head.appendChild(style);
+        }
+        updateThemeIcon();
+    }
+
+    // 3. Update the floating button icon based on state (if present on index.html)
+    function updateThemeIcon() {
+        const btn = document.getElementById('theme-toggle-btn');
+        if (!btn) return;
+        
+        let iconHtml = '';
+        if (currentTheme === 'normal') {
+            iconHtml = '☀️';
+        } else if (currentTheme === 'dark') {
+            iconHtml = '🌙';
+        } else {
+            iconHtml = '📖';
+        }
+        btn.innerHTML = iconHtml;
+    }
+
+    // 4. Expose the toggle function globally
+    window.toggleTheme = function() {
+        if (currentTheme === 'normal') {
+            currentTheme = 'dark';
+        } else if (currentTheme === 'dark') {
+            currentTheme = 'reading';
+        } else {
+            currentTheme = 'normal';
+        }
+        localStorage.setItem('site-theme', currentTheme);
+        applyTheme();
+    };
+
+    // Apply immediately on load to prevent FOUC (Flash of Unstyled Content)
+    applyTheme();
+    
+    // Make sure icon updates once DOM is ready
+    window.addEventListener('DOMContentLoaded', updateThemeIcon);
+
+    // Listen to storage changes so toggling from index.html instantly updates all open chapter tabs
+    window.addEventListener('storage', function (e) {
+        if (e.key === 'site-theme') {
+            currentTheme = e.newValue || 'normal';
+            applyTheme();
+        }
+    });
+})();
