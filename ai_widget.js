@@ -233,12 +233,11 @@
         }
     };
 
+    let injected = false;
     window.addEventListener('DOMContentLoaded', injectWidget);
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         injectWidget();
     }
-
-    let injected = false;
     function injectWidget() {
         if (injected) return;
         injected = true;

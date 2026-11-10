@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="ai-document-summary"
         content="דף הבית ואינדקס הקורס חשבון אינפיניטסימלי 1 (אינפי 1 - 20474). כולל מערכת צירים מתמטית אינטראקטיבית עם שתי עקומות פונקציה מצטלבות (f(x) השואפת לאינסוף ולמינוס אינסוף עבור 8 פרקי הליבה, ו-g(x) הדועכת לאפס עבור משאבי הבונוס וההכנה למבחן), נקודות אור זורמות בהשראת מודלים חישוביים, סרגל הסבר יחידה צמוד מעל הצירים וניווט ישיר לכל חומרי הקורס במסך אחד.">
-    <title>חשבון אינפיניטסימלי 1 (20474) – מפת הקורס והמעבדה האינטראקטיבית</title>
+    <title>חשבון אינפיניטסימלי 1 (20474)</title>
+    <meta name="description"
+        content="מפת הקורס והמעבדה האינטראקטיבית לחשבון אינפיניטסימלי 1 (20474) באוניברסיטה הפתוחה: שפת אפסילון-דלתא, גבולות, רציפות, נגזרות, אינטגרלים וטורים.">
+    <link rel="canonical" href="https://all-the-courses.pages.dev/">
 
     <!-- Google Fonts: Heebo, Rubik, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -302,6 +305,9 @@
             background: rgba(148, 163, 184, 0.5);
         }
     </style>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e11d48'%3E%3Cpath d='M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.98l-2.83-2.83A5.33 5.33 0 0 0 5.4 6.62C2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53L12 13.02l2.83 2.83c.97.97 2.33 1.53 3.77 1.53 2.98 0 5.4-2.42 5.4-5.38s-2.42-5.38-5.4-5.38zm0 8.76c-1.04 0-2.02-.41-2.76-1.15L13.41 12l2.43-2.23c.74-.74 1.72-1.15 2.76-1.15 2.16 0 3.9 1.74 3.9 3.38s-1.74 3.38-3.9 3.38zm-13.2 0c-2.16 0-3.9-1.74-3.9-3.38s1.74-3.38 3.9-3.38c1.04 0 2.02.41 2.76 1.15L10.59 12l-2.43 2.23c-.74.74-1.72 1.15-2.76 1.15z'/%3E%3C/svg%3E">
+    <script src="theme-manager.js"></script>
 </head>
 
 <body class="relative flex flex-col justify-between min-h-screen">
@@ -382,27 +388,111 @@
                 </h1>
 
                 <p class="text-xs sm:text-sm md:text-base text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed">
-                    ברוכים הבאים לאתר הקורס חשבון אינפיניטסימלי 1! באתר תמצאו לימוד באופן ויזואלי וחי של כל חומרי הקורס
-                    על גבי ציר פונקציות אינטראקטיבי, סימולציות עמוקות, 24 מבחנים פתורים ושאלות הכנה, בהצלחה!
+                    סביבת למידה אינטראקטיבית ומתקדמת ללימוד אינפי 1: סימולציות חיות, ציר פונקציות דינמי, ושלושה מצבי למידה מותאמים אישית (פורמלי, בגובה העיניים ומשפטים נטו) בכל פרק.
                 </p>
 
-                <!-- "Why do we need this course?" Separate Glass Bubble (Hidden by default, shown on hover/click) -->
+                <!-- Site Guide & Study Methodology Glass Card (Toggled via Welcome Badge) -->
                 <div id="why-course-card"
                     class="max-h-0 opacity-0 overflow-hidden w-full transition-all duration-500 ease-in-out">
                     <div
-                        class="mt-4 bg-white/65 backdrop-blur-lg rounded-2xl shadow-sm px-5 sm:px-8 py-4 sm:py-5 border border-sky-200/70 text-right">
-                        <h3
-                            class="text-sm sm:text-base font-bold text-slate-800 mb-2 flex items-center justify-start gap-2">
-                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-                            אז למה צריך אתר לקורס? הסבר קצר על האתר:
-                        </h3>
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                            הקורס חשבון אינפיניטסימלי 1 הוא אחד מקורסי היסוד המרתקים והמאתגרים ביותר בתואר במדעי המחשב
-                            ובמתמטיקה. המעבר מחשבון דיפרנציאלי ואינטגרלי תיכוני להוכחות ריגורוזיות (שפת
-                            &epsilon;-&delta;, סדרות וגבולות, רציפות במידה שווה, טורים ואינטגרביליות לפי דארבו) דורש
-                            אינטואיציה עמוקה לצד דיוק מופתי. באתר זה ריכזנו את כל 8 היחידות, מאגרי שאלות אמריקאיות, 24
-                            מבחנים, משחק הישרדות וסיכומים מקיפים – הכל במקום אחד ובגישה אינטראקטיבית. בהצלחה רבה! :)
-                        </p>
+                        class="mt-4 bg-white/85 backdrop-blur-xl rounded-2xl shadow-lg p-4 sm:p-6 border border-sky-200/80 text-right">
+
+                        <!-- Header / Title -->
+                        <div class="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-200/70">
+                            <h3 class="text-sm sm:text-base md:text-lg font-black text-slate-900 flex items-center gap-2.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+                                <span>איך לומדים באתר? חוויית לימוד אינטראקטיבית ורב-ממדית</span>
+                            </h3>
+                            <span class="text-[11px] sm:text-xs font-bold text-sky-700 bg-sky-100/90 px-3 py-1 rounded-full border border-sky-200 shrink-0">
+                                מדריך למידה באתר
+                            </span>
+                        </div>
+
+                        <!-- 3 Study Modes Section -->
+                        <div class="mb-4">
+                            <h4 class="text-xs sm:text-sm font-bold text-slate-800 mb-2.5 flex items-center gap-1.5">
+                                <span>🎯</span>
+                                <span>שלושת מצבי הלמידה בכל פרק (Tabs) – מה ההבדלים ביניהם ומתי להשתמש?</span>
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-right">
+
+                                <!-- Mode 1: Formal -->
+                                <div class="bg-gradient-to-b from-sky-50/80 to-white p-3.5 rounded-xl border border-sky-100/90 shadow-xs flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-lg">🏛️</span>
+                                            <span class="font-black text-xs sm:text-sm text-sky-950">מצב פורמלי</span>
+                                            <span class="text-[10px] font-bold text-blue-700 bg-blue-100/80 px-2 py-0.5 rounded-full border border-blue-200 mr-auto">לבחינה</span>
+                                        </div>
+                                        <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal mb-2.5">
+                                            הגדרות מתמטיות ריגורוזיות, שפת &epsilon;-&delta; מלאה, ניסוחי משפטים קפדניים והוכחות מדויקות צעד-אחר-צעד ברמת האקדמיה והבחינה.
+                                        </p>
+                                    </div>
+                                    <div class="text-[11px] font-medium text-slate-700 pt-2 border-t border-sky-100">
+                                        💡 <strong>מתי להשתמש:</strong> לכתיבה אקדמית מדויקת, הטמעת השפה המתמטית ושליטה מוחלטת בהוכחות המבחן.
+                                    </div>
+                                </div>
+
+                                <!-- Mode 2: Eye-level -->
+                                <div class="bg-gradient-to-b from-emerald-50/80 to-white p-3.5 rounded-xl border border-emerald-100/90 shadow-xs flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-lg">📖</span>
+                                            <span class="font-black text-xs sm:text-sm text-emerald-950">בגובה העיניים</span>
+                                            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-200 mr-auto">אינטואיציה</span>
+                                        </div>
+                                        <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal mb-2.5">
+                                            פירוק הרעיונות המופשטים להסברים נגישים וברורים בגובה העיניים, בליווי אנלוגיות מהחיים ותרשימים שמסבירים "מה זה בעצם אומר בתכל'ס".
+                                        </p>
+                                    </div>
+                                    <div class="text-[11px] font-medium text-slate-700 pt-2 border-t border-emerald-100">
+                                        💡 <strong>מתי להשתמש:</strong> במפגש ראשון עם הגדרה או משפט חדש כדי לבנות אינטואיציה פנימית מוצקה.
+                                    </div>
+                                </div>
+
+                                <!-- Mode 3: Theorems -->
+                                <div class="bg-gradient-to-b from-amber-50/80 to-white p-3.5 rounded-xl border border-amber-100/90 shadow-xs flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="text-lg">⚡</span>
+                                            <span class="font-black text-xs sm:text-sm text-amber-950">משפטים נטו</span>
+                                            <span class="text-[10px] font-bold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-full border border-amber-200 mr-auto">פרקטיקה</span>
+                                        </div>
+                                        <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal mb-2.5">
+                                            תמצית חדה וממוקדת של כל המשפטים, הטענות, תנאי הבדיקה (הנחות) והמסקנות – נטו מה שצריך כדי לפתור שאלות מבלי ללכת לאיבוד במלל.
+                                        </p>
+                                    </div>
+                                    <div class="text-[11px] font-medium text-slate-700 pt-2 border-t border-amber-100">
+                                        💡 <strong>מתי להשתמש:</strong> בחזרות ממוקדות לפני מבחן, שינון מהיר ושליפת נוסחאות ומשפטים בזמן פתרון תרגילים.
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Live Simulations & Interactive Ecosystem -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-right pt-3 border-t border-slate-200/70">
+                            <div class="flex items-start gap-3 bg-slate-50/90 p-3 sm:p-3.5 rounded-xl border border-slate-200/70 shadow-2xs">
+                                <span class="text-2xl shrink-0">🔬</span>
+                                <div>
+                                    <h5 class="text-xs sm:text-sm font-bold text-slate-800 mb-1">סימולציות חיות וגרפים אינטראקטיביים</h5>
+                                    <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal">
+                                        בכל פרק משולבות סימולציות עמוקות (Canvas/SVG) עם סליידרים ושליטה בפרמטרים בזמן אמת. הזזת נקודות, המחשת שאיפה לגבול, רציפות, משיקים, סכומי רימן ופיתוחי טיילור – כדי לראות ולחוש את המתמטיקה חיה מול העיניים ולא רק על הדף.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 bg-slate-50/90 p-3 sm:p-3.5 rounded-xl border border-slate-200/70 shadow-2xs">
+                                <span class="text-2xl shrink-0">🚀</span>
+                                <div>
+                                    <h5 class="text-xs sm:text-sm font-bold text-slate-800 mb-1">מעבר רציף, תרגול ועזרי למידה</h5>
+                                    <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal">
+                                        ציר פונקציות מרכזי לניווט אינטואיטיבי בין 8 פרקי הקורס, מאגר שאלות אמריקאיות אינטראקטיבי עם פירוט מסיחים, בנק בחינות פתורות, משחק "השורד" באינפי ועוזר בינה מלאכותית צף (AI Widget) שזמין בכל רגע לשאלותיכם.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -1154,7 +1244,7 @@
                         <text x="0" y="-7" font-family="Heebo" font-size="11" text-anchor="middle"
                             dominant-baseline="central">📝</text>
                         <text x="0" y="6" font-family="Heebo" font-size="7.5" font-weight="700" fill="#334155"
-                            text-anchor="middle" dominant-baseline="central">24</text>
+                            text-anchor="middle" dominant-baseline="central">מאגר</text>
                         <text x="0" y="15" font-family="Heebo" font-size="7.5" font-weight="700" fill="#334155"
                             text-anchor="middle" dominant-baseline="central">מבחנים</text>
                     </g>
@@ -1348,7 +1438,7 @@
                 desc: 'ארכיון ענק ומסודר של 24 בחינות גמר רשמיות של האוניברסיטה הפתוחה משנים אחרונות. כולל שאלות פתוחות, הוכחות משפטים ושאלות רב-ברירה, עם פתרונות מפורטים ומנומקים שלב-אחר-שלב לפי המחוון הרשמי.',
                 btnText: 'למאגר המבחנים',
                 color: '#ea580c',
-                pills: ['24 שאלוני בחינה מקוריים', 'פתרונות מלאים ומנומקים', 'חלוקה לפי מועדים וסמסטרים', 'הכנה ממוקדת לבחינת הגמר']
+                pills: ['מאגר שאלוני בחינה מקוריים', 'פתרונות מלאים ומנומקים', 'חלוקה לפי מועדים וסמסטרים', 'הכנה ממוקדת לבחינת הגמר']
             },
             'game': {
                 badge: 'בונוס 3',
@@ -1437,33 +1527,51 @@
             const whyCourseCard = document.getElementById('why-course-card');
             if (courseBadge && whyCourseCard) {
                 let isWhyOpen = false;
-                const toggleWhyCard = (forceState) => {
-                    isWhyOpen = forceState !== undefined ? forceState : !isWhyOpen;
-                    if (isWhyOpen) {
-                        whyCourseCard.classList.remove('max-h-0', 'opacity-0');
-                        whyCourseCard.classList.add('max-h-[500px]', 'opacity-100');
+                let isPinned = false;
+                const setCardState = (open) => {
+                    isWhyOpen = open;
+                    if (open) {
+                        whyCourseCard.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+                        whyCourseCard.classList.add('max-h-[1400px]', 'opacity-100');
                     } else {
-                        whyCourseCard.classList.remove('max-h-[500px]', 'opacity-100');
-                        whyCourseCard.classList.add('max-h-0', 'opacity-0');
+                        whyCourseCard.classList.remove('max-h-[1400px]', 'opacity-100');
+                        whyCourseCard.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
                     }
                 };
-                courseBadge.addEventListener('mouseenter', () => toggleWhyCard(true));
-                courseBadge.addEventListener('mouseleave', () => toggleWhyCard(false));
+                courseBadge.addEventListener('mouseenter', () => {
+                    if (!isPinned) setCardState(true);
+                });
+                courseBadge.addEventListener('mouseleave', () => {
+                    if (!isPinned) setCardState(false);
+                });
+                whyCourseCard.addEventListener('mouseenter', () => {
+                    if (!isPinned) setCardState(true);
+                });
+                whyCourseCard.addEventListener('mouseleave', () => {
+                    if (!isPinned) setCardState(false);
+                });
                 courseBadge.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    toggleWhyCard();
+                    isPinned = !isPinned;
+                    setCardState(isPinned);
+                });
+                document.addEventListener('click', (e) => {
+                    if (isPinned && !whyCourseCard.contains(e.target) && !courseBadge.contains(e.target)) {
+                        isPinned = false;
+                        setCardState(false);
+                    }
                 });
             }
         });
     </script>
 
     <!-- Theme Manager Script (Syncs Day/Night/Reading mode across all open tabs) -->
-    <script src="theme-manager.js"></script>
 
     <!-- Cloudflare Web Analytics -->
     <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js'
         data-cf-beacon='{"token": "cad01214e4b14a308da59cc7a8061fd3"}'></script><!-- End Cloudflare Web Analytics -->
 
+    <script src="ai_widget.js"></script>
 </body>
 
 </html>
