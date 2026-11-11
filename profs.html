@@ -303,32 +303,88 @@
         <main class="flex-1 min-w-0 px-3 sm:px-6 md:px-8 py-5 max-w-5xl mx-auto w-full space-y-5">
 
             <!-- ================================================================= -->
-            <!-- GLOBAL MANDATORY SEMESTER WARNING BANNER                          -->
+            <!-- GLOBAL FIRST-ENTRY SEMESTER SELECTION MODAL POPUP                 -->
+            <!-- מוצג רק בכניסה ראשונה כאשר הקאש/localStorage לא מכיל בחירה         -->
             <!-- ================================================================= -->
-            <div id="semester-mandatory-warning-banner" class="rounded-3xl bg-gradient-to-l from-amber-50 via-orange-50/90 to-rose-50/80 border-2 border-amber-400/90 p-4 sm:p-5 shadow-sm">
-                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    <div class="flex items-start gap-3.5">
-                        <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl font-extrabold shrink-0 shadow-xs">⚠️</div>
-                        <div class="space-y-1">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-600 text-white">חובה לפני תחילת הלמידה!</span>
-                                <h2 class="text-sm sm:text-base md:text-lg font-extrabold text-slate-900">שימו לב: בכל סמסטר מתפרסמת רשימת משפטי הוכחה שונה לבחינה!</h2>
+            <div id="semester-mandatory-warning-banner" onclick="if(event.target===this) dismissSemesterWarningBanner()" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+                <div class="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl border-2 border-amber-400 p-6 sm:p-8 space-y-5 text-right transition-all transform scale-100">
+                    <!-- כפתור איקס משמאל למעלה לסגירה -->
+                    <button type="button" onclick="dismissSemesterWarningBanner()" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 flex items-center justify-center text-lg font-black transition border border-slate-200 hover:border-rose-300 shadow-2xs" title="סגור (✕)" aria-label="סגור">
+                        ✕
+                    </button>
+
+                    <!-- כותרת החלון הקופץ -->
+                    <div class="flex items-center gap-3 pr-1">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl font-black shadow-xs shrink-0">
+                            ⚠️
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-600 text-white">שלב חובה לפני תחילת הלמידה!</span>
+                                <span class="text-xs font-bold text-amber-800">אינפי 1 (20474)</span>
                             </div>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                                בקורס אינפי 1 (20474) רשימת המשפטים להוכחה משתנה מסמסטר לסמסטר (בהתאם לקובץ רשימת המשפטים שמפרסם מרכז הקורס כחודש לפני הבחינה). <strong>חובה להיכנס ולסמן אילו משפטים מופיעים הסמסטר ואילו לא מופיעים הסמסטר.</strong> משפט שתסמנו כ<strong>"לא מופיע הסמסטר"</strong> יוסתר לחלוטין מכל המצבים, הטבלאות, הסימולציות והכרטיסיות — אין שום סיבה שתלמדו משפט שלא מופיע הסמסטר!
-                            </p>
+                            <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
+                                בחירת משפטי הסמסטר לבחינה
+                            </h2>
                         </div>
                     </div>
-                    <div class="flex flex-wrap items-center gap-2 shrink-0 self-start lg:self-center">
-                        <button type="button" onclick="applySemesterPreset('2026c'); showView('semester-filter');" class="px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-xs transition flex items-center gap-1.5" title="בחירה וסינון מיידי של 36 משפטי סמסטר 2026ג (ללא 6 המשפטים שירדו)">
-                            <span>🎯 החל משפטי 2026ג (36 משפטים)</span>
+
+                    <!-- ההסבר המלא -->
+                    <div class="rounded-2xl bg-amber-50/90 border border-amber-200/90 p-4 sm:p-5 space-y-2 text-slate-800">
+                        <p class="text-sm font-extrabold text-amber-950 leading-relaxed">
+                            שימו לב: בכל סמסטר מתפרסמת רשימת משפטי הוכחה שונה לבחינה!
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                            בקורס אינפי 1 רשימת המשפטים משתנה מסמסטר לסמסטר. משפט שלא מופיע בסמסטר שלכם יוסתר לחלוטין מכל המצבים (שינון, סימולציות, כרטיסיות וטבלאות) כדי שתלמדו אך ורק את מה שנדרש מכם!
+                        </p>
+                    </div>
+
+                    <!-- שתי אופציות הבחירה מתחת להסבר -->
+                    <div class="space-y-3 pt-1">
+                        <div class="text-xs font-extrabold text-slate-700">
+                            בחרו את מצב הלמידה המבוקש לסמסטר זה:
+                        </div>
+
+                        <!-- אופציה 1: משפטי סמסטר 2026ג -->
+                        <button type="button" onclick="selectSemesterOption('2026c')" class="group w-full p-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-md hover:shadow-lg transition-all flex items-center justify-between gap-3 text-right border-2 border-amber-500 hover:scale-[1.01]">
+                            <div class="flex items-center gap-3.5">
+                                <span class="w-11 h-11 rounded-xl bg-slate-950 text-amber-300 flex items-center justify-center text-2xl shrink-0 shadow-2xs">🎓</span>
+                                <div>
+                                    <div class="text-sm sm:text-base font-black flex flex-wrap items-center gap-2">
+                                        <span>משפטי סמסטר 2026ג</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-slate-950 text-amber-300 text-[10px] font-bold">המיקוד העדכני (36 משפטים)</span>
+                                    </div>
+                                    <div class="text-xs text-slate-900 font-medium mt-0.5 leading-snug">
+                                        החרגה אוטומטית של 6 המשפטים שירדו: 2.34, 3.36, 4.39, 5.14, 6.16, 8.14
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-xl font-black text-slate-950 mr-2 group-hover:-translate-x-1.5 transition-transform shrink-0">◀</span>
                         </button>
-                        <button type="button" onclick="showView('semester-filter')" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold bg-amber-600 hover:bg-amber-700 text-white shadow-xs transition flex items-center gap-1.5">
-                            <span>⚙️ בחירת וסינון משפטי הסמסטר</span>
-                            <span class="px-2 py-0.5 rounded-lg bg-white/20 text-white text-xs font-mono" id="banner-sem-count-pill">42/42 פעילים</span>
+
+                        <!-- אופציה 2: כל 42 המשפטים -->
+                        <button type="button" onclick="selectSemesterOption('all')" class="group w-full p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 text-slate-900 border-2 border-slate-200 hover:border-indigo-400 shadow-2xs hover:shadow-md transition-all flex items-center justify-between gap-3 text-right hover:scale-[1.01]">
+                            <div class="flex items-center gap-3.5">
+                                <span class="w-11 h-11 rounded-xl bg-white text-indigo-700 border border-slate-200 flex items-center justify-center text-2xl shrink-0 shadow-2xs">📚</span>
+                                <div>
+                                    <div class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
+                                        <span>כל 42 המשפטים</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold">מאגר מלא</span>
+                                    </div>
+                                    <div class="text-xs text-slate-600 font-normal mt-0.5 leading-snug">
+                                        הכללת כל 42 משפטי הספרים ללא סינון מראש (ניתן לסנן ידנית בכל עת)
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-xl font-bold text-slate-400 group-hover:text-indigo-600 group-hover:-translate-x-1.5 transition-all mr-2 shrink-0">◀</span>
                         </button>
-                        <button type="button" onclick="dismissSemesterWarningBanner()" class="px-3 py-2 rounded-2xl text-xs font-bold bg-white/80 hover:bg-white text-slate-600 border border-amber-300 transition" title="הסתר הודעה זו (תמיד ניתן להיכנס דרך הכפתור בסרגל העליון או במשבצת בשער)">
-                            הסתר אזהרה ✕
+                    </div>
+
+                    <!-- הערת הרגעה תחתונה -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+                        <span>💡 תמיד תוכלו לשנות בחירה זו דרך כפתור "סינון משפטי הסמסטר" בסרגל העליון</span>
+                        <button type="button" onclick="showView('semester-filter'); dismissSemesterWarningBanner();" class="text-indigo-600 hover:underline font-bold">
+                            סינון ידני פרטני ◀
                         </button>
                     </div>
                 </div>
@@ -608,10 +664,6 @@
                     <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/15">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-xs font-extrabold text-amber-300 ml-1">בחירה מהירה לפי תבנית סמסטר:</span>
-                            <button type="button" onclick="applySemesterPreset('all')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-2xs transition">✔ כל 42 המשפטים (הכל מופיע)</button>
-                            <button type="button" onclick="applySemesterPreset('official39')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/15 hover:bg-white/25 text-white border border-white/25 transition">📜 רשימת 39 המשפטים הרשמית (קובץ רשימת משפטים)</button>
-                            <button type="button" onclick="applySemesterPreset('no_unif')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/15 hover:bg-white/25 text-white border border-white/25 transition">📌 מיקוד ללא רציפות במ"ש (ללא קנטור 5.48)</button>
-                            <button type="button" onclick="applySemesterPreset('high_freq')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/15 hover:bg-white/25 text-white border border-white/25 transition">🔥 רק המשפטים הנפוצים ביותר (5+ הופעות)</button>
                             <button type="button" id="sem-preset-btn-all" onclick="applySemesterPreset('all')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-2xs transition">✔ כל 42 המשפטים (הכל מופיע)</button>
                             <button type="button" id="sem-preset-btn-2026c" onclick="applySemesterPreset('2026c')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-2xs transition flex items-center gap-1.5" title="סמסטר 2026ג: 36 משפטים פעילים — כל המשפטים חוץ מששת המשפטים שירדו: 2.34, 3.36, 4.39, 5.14, 6.16, 8.14">
                                 <span>🎯 משפטי 2026ג (36 משפטים — ללא 6 שהורדו)</span>
@@ -1587,8 +1639,6 @@
             </div>
         `;
 
-        const blindHtml = steps.map((st, sIdx) => `<div class="rounded-2xl border border-slate-200/80
-... [truncated for diff preview]
         const blindHtml = steps.map((st, sIdx) => `<div class="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4"><div class="flex flex-wrap items-center justify-between gap-2 mb-2"><span class="text-xs font-bold text-indigo-800 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-lg">שלב ${sIdx+1} לשחזור (רמז: ${formatBidiMathHtml(st.mnemonic)})</span><button type="button" onclick="toggleBlindStep('${tid}', ${sIdx})" class="px-3 py-1 rounded-xl text-xs font-semibold bg-white border border-slate-200 hover:bg-indigo-50 text-indigo-700 transition">👁️ הצג / הסתר פתרון</button></div><textarea rows="2" placeholder="נסו לכתוב כאן מהזיכרון את שלב ${sIdx+1}..." class="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-800 focus:outline-none focus:border-indigo-400 mb-2"></textarea><div id="blind-ans-${tid}-${sIdx}" class="hidden rounded-xl bg-emerald-50/90 border border-emerald-200 p-3 text-xs space-y-1"><div class="font-bold text-emerald-950">✔ ניסוח השלב (${st.title}): ${st.quote}</div><div class="text-emerald-900">נוסחה: <span dir="ltr">\\(${st.formula}\\)</span> | נימוק: ${st.whyNecessary}</div></div></div>`).join('');
 
         const mcqHtml = (t.mcqs || []).map((mcq, qIdx) => `<div class="rounded-2xl border border-slate-200/80 bg-slate-50/50 p-4 flex flex-col justify-between" id="mcq-box-${tid}-${qIdx}"><div><div class="text-xs font-bold text-indigo-600 mb-1">שאלה ${qIdx+1}:</div><div class="text-sm font-bold text-slate-800 mb-3 leading-relaxed">${mcq.q}</div><div class="space-y-2">${mcq.options.map((optTxt, oI) => `<button type="button" onclick="checkMcq('${tid}', ${qIdx}, ${oI}, ${mcq.correct})" id="mcq-btn-${tid}-${qIdx}-${oI}" class="option-btn text-xs"><span class="font-bold ml-1">${['א','ב','ג','ד'][oI]}.</span> ${formatBidiMathHtml(optTxt)}</button>`).join('')}</div></div><div id="mcq-exp-${tid}-${qIdx}" class="hidden mt-3 rounded-xl p-3 text-xs bg-emerald-50 border border-emerald-200 text-emerald-950 leading-relaxed"><strong>הסבר מלא:</strong> ${formatBidiMathHtml(mcq.explanation)}</div></div>`).join('');
@@ -4709,6 +4759,7 @@ window.SIM_RENDERERS = {
     window.starredSet = new Set();
     window.semesterExcludedSet = new Set();
     window.semesterBannerDismissed = false;
+    window.semesterChoiceMade = null;
     window.semFilterViewTab = 'all';
     window.personalDifficulty = {};
     window.personalNotes = {};
@@ -4747,6 +4798,7 @@ window.SIM_RENDERERS = {
             if (Array.isArray(data.starred)) window.starredSet = new Set(data.starred);
             if (Array.isArray(data.semesterExcluded)) window.semesterExcludedSet = new Set(data.semesterExcluded);
             if (typeof data.semesterBannerDismissed === 'boolean') window.semesterBannerDismissed = data.semesterBannerDismissed;
+            if (data.semesterChoiceMade) window.semesterChoiceMade = data.semesterChoiceMade;
             if (data.difficulty) window.personalDifficulty = data.difficulty;
             if (data.notes) window.personalNotes = data.notes;
             if (data.stepGrades) window.stepSelfGrades = data.stepGrades;
@@ -4764,6 +4816,7 @@ window.SIM_RENDERERS = {
                 starred: Array.from(window.starredSet),
                 semesterExcluded: Array.from(window.semesterExcludedSet),
                 semesterBannerDismissed: window.semesterBannerDismissed,
+                semesterChoiceMade: window.semesterChoiceMade || null,
                 difficulty: window.personalDifficulty,
                 notes: window.personalNotes,
                 stepGrades: window.stepSelfGrades,
@@ -4774,12 +4827,23 @@ window.SIM_RENDERERS = {
         } catch (e) {}
     }
 
+    function selectSemesterOption(opt) {
+        window.semesterChoiceMade = opt;
+        window.semesterBannerDismissed = true;
+        applySemesterPreset(opt);
+        savePersonalState();
+        const b = document.getElementById('semester-mandatory-warning-banner');
+        if (b) b.classList.add('hidden');
+    }
+    window.selectSemesterOption = selectSemesterOption;
+
     function dismissSemesterWarningBanner() {
         window.semesterBannerDismissed = true;
         savePersonalState();
         const b = document.getElementById('semester-mandatory-warning-banner');
         if (b) b.classList.add('hidden');
     }
+    window.dismissSemesterWarningBanner = dismissSemesterWarningBanner;
 
     function setTheoremSemesterIncluded(tid, includeFlag) {
         if (includeFlag) {
@@ -5119,9 +5183,14 @@ window.SIM_RENDERERS = {
             ).join('');
         }
 
-        if (window.semesterBannerDismissed) {
-            const b = document.getElementById('semester-mandatory-warning-banner');
-            if (b) b.classList.add('hidden');
+        const modal = document.getElementById('semester-mandatory-warning-banner');
+        if (modal) {
+            const hasChoiceInCache = window.semesterBannerDismissed || !!window.semesterChoiceMade || (window.semesterExcludedSet && window.semesterExcludedSet.size > 0);
+            if (hasChoiceInCache) {
+                modal.classList.add('hidden');
+            } else {
+                modal.classList.remove('hidden');
+            }
         }
 
         rebuildTopStepper();
