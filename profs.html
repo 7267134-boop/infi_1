@@ -165,6 +165,55 @@
             .katex { font-size: 0.98em; }
             .math-chip { font-size: 0.88em; padding: 0.02rem 0.3rem; }
         }
+
+        /* PDF Continuous Export & Print Styles */
+        #pdf-printable-container {
+            display: none;
+        }
+        @media print {
+            body.is-printing-pdf {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            body.is-printing-pdf > *:not(#pdf-printable-container) {
+                display: none !important;
+            }
+            body.is-printing-pdf #pdf-printable-container,
+            body.is-printing-pdf #pdf-printable-container * {
+                visibility: visible !important;
+            }
+            body.is-printing-pdf #pdf-printable-container {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+            .print-theorem-page {
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+            .print-final-page {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+            a {
+                color: #1d4ed8 !important;
+                text-decoration: underline !important;
+            }
+            header, aside, #sidebar, #sidebar-backdrop, .no-print, button {
+                display: none !important;
+            }
+        }
     </style>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e11d48'%3E%3Cpath d='M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.98l-2.83-2.83A5.33 5.33 0 0 0 5.4 6.62C2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53L12 13.02l2.83 2.83c.97.97 2.33 1.53 3.77 1.53 2.98 0 5.4-2.42 5.4-5.38s-2.42-5.38-5.4-5.38zm0 8.76c-1.04 0-2.02-.41-2.76-1.15L13.41 12l2.43-2.23c.74-.74 1.72-1.15 2.76-1.15 2.16 0 3.9 1.74 3.9 3.38s-1.74 3.38-3.9 3.38zm-13.2 0c-2.16 0-3.9-1.74-3.9-3.38s1.74-3.38 3.9-3.38c1.04 0 2.02.41 2.76 1.15L10.59 12l-2.43 2.23c-.74.74-1.72 1.15-2.76 1.15z'/%3E%3C/svg%3E">
     <script>(function(){try{if(location.protocol==="http:"||location.protocol==="https:"){var s=document.createElement("script");s.src="theme-manager.js";s.async=true;s.onerror=function(){};document.head.appendChild(s);}}catch(e){}})();</script>
@@ -172,46 +221,21 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- Minimal Always-Accessible Top Strip with Unified Menu & Quick Navigation -->
+        <!-- Minimal Always-Accessible Top Strip with Unified Menu & Quick Navigation -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
         <div class="max-w-7xl mx-auto px-2.5 sm:px-5 py-2.5 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-wrap">
-                <!-- 1. עמוד ראשי ורצף 44 המשפטים -->
-                <button type="button" onclick="showView('landing')" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white transition shrink-0 shadow-2xs" title="מעבר לעמוד הראשי ולכל 44 המשפטים + ההוכחות ברצף">
-                    <span class="material-symbols-outlined text-[17px]">home</span>
-                    <span>עמוד ראשי (44 המשפטים ברצף)</span>
-                </button>
-
-                <!-- 2. חזרה לאינדקס -->
-                <button type="button" onclick="goToTheoremsCatalog()" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-indigo-50 text-slate-800 hover:text-indigo-700 border border-slate-200/80 transition shrink-0 shadow-2xs" title="מעבר מהיר לאינדקס 44 המשפטים ברצף">
-                    <span class="material-symbols-outlined text-[17px]">format_list_bulleted</span>
-                    <span>חזרה לאינדקס</span>
-                </button>
-
-                <!-- 3. חזרה לתפריט הראשי של הקורס -->
-                <button type="button" onclick="navigateToLocalFile('index.html', false)" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-blue-100/90 hover:bg-blue-600 text-blue-900 hover:text-white border border-blue-300 transition shrink-0 no-underline shadow-2xs" title="חזרה לדף האינדקס הראשי של הקורס">
+            <div class="flex items-center gap-2 min-w-0 flex-wrap">
+                <!-- 1. חזרה לתפריט הראשי של הקורס (אינדקס) -->
+                <button type="button" onclick="navigateToLocalFile('index.html', false)" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-blue-100 hover:bg-blue-600 text-blue-900 hover:text-white border border-blue-300 transition shrink-0 no-underline shadow-2xs" title="חזרה לדף האינדקס הראשי של הקורס">
                     <span class="material-symbols-outlined text-[17px]">hub</span>
-                    <span class="hidden sm:inline">תפריט הקורס</span>
-                    <span class="sm:hidden">ראשי</span>
+                    <span>תפריט ראשי של הקורס</span>
                 </button>
 
-                <!-- 5. סינון משפטי הסמסטר -->
-                <button type="button" id="header-sem-filter-btn" onclick="showView('semester-filter')" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-amber-100 hover:bg-amber-500 text-amber-950 hover:text-white border border-amber-300 transition shrink-0 shadow-2xs" title="בחירת וסינון המשפטים שמופיעים הסמסטר">
-                    <span class="material-symbols-outlined text-[17px]">tune</span>
-                    <span class="hidden md:inline">סינון משפטי הסמסטר</span>
-                    <span class="md:hidden">סינון</span>
-                    <span id="header-sem-count-badge" class="px-1.5 py-0.5 rounded-md bg-amber-600 text-white text-[11px] font-mono">44/44</span>
+                <!-- 2. תפריט ההוכחות המלא -->
+                <button type="button" onclick="showView('landing')" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white transition shrink-0 shadow-2xs" title="מעבר לתפריט ההוכחות המלא ולכל המשפטים">
+                    <span class="material-symbols-outlined text-[17px]">format_list_bulleted</span>
+                    <span>תפריט ההוכחות המלא</span>
                 </button>
-
-                <!-- 6. תפריט משפטים וכלים (פתיחה/סגירה) -->
-                <button id="unified-nav-toggle-btn" type="button" onclick="toggleUnifiedNav()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-slate-800 hover:bg-slate-900 text-white shadow-xs transition shrink-0" title="פתח/סגור תפריט סיידבר עליון וצדי">
-                    <span class="material-symbols-outlined text-[18px]" id="unified-nav-icon">menu</span>
-                    <span id="unified-nav-btn-label" class="hidden lg:inline">תפריט משפטים וכלים</span>
-                    <span class="lg:hidden">תפריט</span>
-                </button>
-
-                <div class="hidden xl:block truncate text-xs sm:text-sm font-bold text-slate-800 mr-1" id="header-context-title">
-                    אינפי 1 — מרכז השליטה ב-44 משפטי ההוכחה
-                </div>
             </div>
 
             <!-- Quick Contextual Controls (Prev/Next Theorem & Clean Reading Toggle) -->
@@ -224,34 +248,6 @@
                     <button type="button" onclick="stepNextTheorem(-1)" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="המשפט הקודם">▶ הקודם</button>
                     <button type="button" onclick="stepNextTheorem(1)" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="המשפט הבא">הבא ◀</button>
                 </div>
-            </div>
-        </div>
-
-        <!-- UNIFIED TOP BAR ("הסיידבר העליון"): Opens ONLY when Unified Menu is toggled open! -->
-        <div id="top-stepper-bar" class="hidden border-t border-indigo-100 bg-gradient-to-l from-indigo-50/70 via-white to-slate-50 px-3 sm:px-5 py-3 shadow-inner">
-            <div class="max-w-7xl mx-auto space-y-2.5">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <div class="flex flex-wrap items-center gap-1.5">
-                        <span class="text-xs font-extrabold text-indigo-950 ml-1">מעבר מהיר למצבים:</span>
-                        <button type="button" onclick="showView('landing')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-indigo-50 text-slate-800 border border-slate-200 shadow-2xs transition">🏠 עמוד שער ראשי</button>
-                        <button type="button" onclick="navigateToLocalFile('index.html', false)" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 shadow-2xs transition">🌐 חזרה לתפריט הראשי</button>
-                        <button type="button" onclick="goToTheoremsCatalog()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 transition">📋 אינדקס 44 המשפטים</button>
-                        <button type="button" onclick="showTheorem(window.currentTheoremId || 't1')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 transition">📖 למידת הוכחות (44)</button>
-                        <button type="button" onclick="showView('semester-filter')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 shadow-2xs transition">⚠️ סינון משפטי הסמסטר (<span class="sem-active-count-lbl">44</span>)</button>
-                        <button type="button" onclick="showView('exam-frequency')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 transition">📊 טבלת שכיחויות ומבחנים (2015א–2026ב)</button>
-                        <button type="button" onclick="showView('exam-sim')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 transition">📝 סימולציית 35 נק' (שאלה 1+2א)</button>
-                        <button type="button" onclick="showView('flashcards')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 transition">🃏 כרטיסיות שינון</button>
-                        <button type="button" onclick="showView('global-arena')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 transition">🕵️ בוחן בודקים ומרתון</button>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="toggleCleanReadingMode()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 transition">
-                            ✨ <span class="clean-mode-label">מצב קריאה נקייה</span>
-                        </button>
-                        <button type="button" onclick="stepNextUnlearned()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition">⏭️ קפוץ למשפט הבא שטרם נלמד</button>
-                    </div>
-                </div>
-                <!-- Compact 1..42 Theorem Number Stepper -->
-                <div class="flex items-center gap-1 overflow-x-auto pb-1 pt-0.5" id="top-proof-stepper"></div>
             </div>
         </div>
     </header>
@@ -387,8 +383,8 @@
             <!-- VIEW 0: LANDING PAGE ("עמוד שער ראשי")                             -->
             <!-- ================================================================= -->
             <section id="section-landing" class="theorem-section space-y-5 pb-16">
-                <!-- מרכז השליטה המלא (Hero קומפקטי וממוקד) -->
-                <div class="rounded-3xl bg-gradient-to-l from-indigo-950 via-indigo-900 to-slate-900 text-white p-5 sm:p-7 shadow-md relative overflow-hidden">
+                <!-- מרכז השליטה המלא + תפריט מצבים ראשי (מאוחד) -->
+                <div class="rounded-3xl bg-gradient-to-l from-indigo-950 via-indigo-900 to-slate-900 text-white p-5 sm:p-7 shadow-md relative overflow-hidden space-y-5">
                     <div class="relative z-10 space-y-4">
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <div class="flex flex-wrap items-center gap-2">
@@ -408,109 +404,162 @@
                             </p>
                         </div>
 
+                        <!-- Hero 4 Stat Tiles -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
                             <div onclick="setLandingStatusFilter('learned')" class="cursor-pointer bg-white/10 hover:bg-white/15 backdrop-blur-xs rounded-2xl p-3 border border-white/15 transition" title="לחצו להצגת המשפטים שנלמדו">
-                                <div class="text-xs text-indigo-200">משפטים שנלמדו ✔</div>
+                                <div class="text-xs text-indigo-200 font-bold">משפטים שנלמדו ✔</div>
                                 <div class="text-xl sm:text-2xl font-extrabold text-emerald-300 mt-0.5" id="landing-stat-mastered">0 / 44</div>
                                 <div class="w-full bg-white/15 h-1.5 rounded-full mt-1.5 overflow-hidden">
                                     <div id="landing-progress-bar" class="bg-emerald-400 h-full transition-all duration-300" style="width: 0%"></div>
                                 </div>
                             </div>
                             <div onclick="setLandingStatusFilter('unlearned')" class="cursor-pointer bg-white/10 hover:bg-white/15 backdrop-blur-xs rounded-2xl p-3 border border-white/15 transition" title="לחצו להצגת המשפטים שנשארו ללמוד">
-                                <div class="text-xs text-indigo-200">נשאר ללמוד</div>
+                                <div class="text-xs text-indigo-200 font-bold">נשאר ללמוד</div>
                                 <div class="text-xl sm:text-2xl font-extrabold text-amber-300 mt-0.5" id="landing-stat-unlearned">44 משפטים</div>
                                 <div class="text-[11px] text-indigo-200/80 mt-1">מסומנים לחזרה: <span id="landing-stat-starred" class="font-bold text-amber-200">⭐ 0</span></div>
                             </div>
                             <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/15">
-                                <div class="text-xs text-indigo-200">שלבים בשליטה מלאה</div>
+                                <div class="text-xs text-indigo-200 font-bold">שלבים בשליטה מלאה</div>
                                 <div class="text-xl sm:text-2xl font-extrabold text-sky-300 mt-0.5" id="landing-stat-steps">0 שלבים</div>
                                 <div class="text-[11px] text-indigo-200/80 mt-1">מתוך 168 שלבי הוכחה</div>
                             </div>
-                            <div onclick="showView('exam-frequency')" class="cursor-pointer bg-white/10 hover:bg-white/15 backdrop-blur-xs rounded-2xl p-3 border border-white/15 transition" title="לחצו לפתיחת טבלת השכיחויות ומפת המבחנים">
-                                <div class="text-xs text-indigo-200">שכיחויות ונתונים</div>
-                                <div class="text-xl sm:text-2xl font-extrabold text-rose-300 mt-0.5">2015א–2026ב</div>
-                                <div class="text-[11px] text-indigo-200/80 mt-1">לחצו לטבלת שכיחויות ◀</div>
+                            <div onclick="showView('exam-frequency')" class="cursor-pointer bg-white/10 hover:bg-white/15 backdrop-blur-xs rounded-2xl p-3 border border-white/15 transition" title="צפייה בטבלת השכיחויות">
+                                <div class="text-xs text-indigo-200 font-bold">שכיחות ממוצעת בבחינה</div>
+                                <div class="text-xl sm:text-2xl font-extrabold text-rose-300 mt-0.5">3.4 מועדים</div>
+                                <div class="text-[11px] text-indigo-200/80 mt-1">ניתוח 25 מבחנים ◀</div>
+                            </div>
+                        </div>
+
+                        <!-- 4 כפתורי המצבים הראשיים — מחוברים למרכז השליטה -->
+                        <div class="pt-3 border-t border-white/15 space-y-2">
+                            <div class="flex items-center justify-between text-xs font-extrabold text-indigo-200">
+                                <span>תפריט מצבים ראשי:</span>
+                                <span class="text-[11px] text-indigo-300 font-medium">בחרו את אופן התצוגה והלמידה המועדף</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                                <!-- מצב 1: כל המשפטים + הוכחות במצב נקי -->
+                                <button type="button" id="lmode-btn-clean-proofs" onclick="setLandingDisplayMode('clean-proofs')" class="p-3 rounded-2xl border-2 transition text-right flex flex-col justify-between gap-1.5 shadow-2xs">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs sm:text-sm font-extrabold">1. כל המשפטים + הוכחות במצב נקי</span>
+                                        <span class="text-sm">📄</span>
+                                    </div>
+                                    <div class="text-[11px] leading-snug opacity-90">המשפט וההוכחה ברצף נקי, כפי שכותבים במחברת הבחינה</div>
+                                </button>
+
+                                <!-- מצב 2: כל המשפטים + הוכחות בסדר לימוד (אינדקס היחידות כמו בתמונה) -->
+                                <button type="button" id="lmode-btn-study-proofs" onclick="setLandingDisplayMode('study-proofs')" class="p-3 rounded-2xl border-2 transition text-right flex flex-col justify-between gap-1.5 shadow-2xs">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs sm:text-sm font-extrabold">2. כל המשפטים + הוכחות בסדר לימוד</span>
+                                        <span class="text-sm">🎨</span>
+                                    </div>
+                                    <div class="text-[11px] leading-snug opacity-90">אינדקס משפטים לפי יחידות: בחירה בריבוע, שכיחות וכניסה להוכחה מלאה וסימולטור</div>
+                                </button>
+
+                                <!-- מצב 3: כל המשפטים בסדר (ניסוח בלבד) -->
+                                <button type="button" id="lmode-btn-statements-only" onclick="setLandingDisplayMode('statements-only')" class="p-3 rounded-2xl border-2 transition text-right flex flex-col justify-between gap-1.5 shadow-2xs">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs sm:text-sm font-extrabold">3. כל המשפטים בסדר (ניסוח בלבד)</span>
+                                        <span class="text-sm">📋</span>
+                                    </div>
+                                    <div class="text-[11px] leading-snug opacity-90">ניסוח המשפט והנוסחאות בלבד ברצף, לחיצה פותחת את ההוכחה המלאה</div>
+                                </button>
+
+                                <!-- מצב 4: שכיחות ונתונים -->
+                                <button type="button" onclick="showView('exam-frequency')" class="p-3 rounded-2xl border-2 border-rose-400/40 bg-rose-950/40 hover:bg-rose-900/60 text-white text-right transition flex flex-col justify-between gap-1.5 shadow-2xs">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs sm:text-sm font-extrabold">4. שכיחות ונתונים (2015א–2026ב)</span>
+                                        <span class="text-sm">📊</span>
+                                    </div>
+                                    <div class="text-[11px] leading-snug text-rose-200">טבלת שכיחויות מלאה, מפת 25 מבחנים, פילוח מועדים ודגשי בודקים</div>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ================================================================= -->
-                <!-- תפריט מצבים ראשי, סינון ובקרה + כל 44 המשפטים וההוכחות ברצף       -->
-                <!-- ================================================================= -->
-                <div id="landing-fast-index-card" class="bg-white rounded-3xl border-2 border-indigo-200/90 p-4 sm:p-6 shadow-xs space-y-4">
-                    <!-- שורה 1: בחירת מצב תצוגה מרכזי או כלי אימון -->
-                    <div class="space-y-2.5 border-b border-slate-100 pb-4">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <div class="text-xs sm:text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
-                                <span>🎛️ תפריט מצבים ראשי (בחרו תצוגת רצף או כלי תרגול):</span>
+                <!-- ארבעת הריבועים (כרטיסי הכלים והסימולציה תחת תפריט המצבים) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                    <!-- 1. בחירת וסינון משפטי הסמסטר -->
+                    <div onclick="showView('semester-filter')" class="cursor-pointer rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50/70 border-2 border-amber-300 hover:border-amber-500 hover:shadow-md p-4 transition flex flex-col justify-between gap-2.5 group">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg font-bold shadow-2xs">⚠️</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white">חובה בכל סמסטר!</span>
                             </div>
-                            <span class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200">
-                                💡 לחיצה על כל משפט ברשימה פותחת את המשפט עם ההוכחה ברצף, החלוקה הצבועה והשלבים המפורטים!
-                            </span>
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-amber-800 transition">בחירת וסינון משפטי הסמסטר</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                הגדרת מיקוד הסמסטר (2026ג או כל המאגר). משפט שלא מופיע מוסתר מכל המצבים.
+                            </p>
                         </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                            <!-- מצב 1: כל המשפטים + הוכחות במצב נקי (ברירת מחדל) -->
-                            <button type="button" id="lmode-btn-clean-proofs" onclick="setLandingDisplayMode('clean-proofs')" class="p-3 rounded-2xl border-2 border-indigo-600 bg-indigo-600 text-white text-right transition shadow-sm flex flex-col justify-between gap-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="text-xs sm:text-sm font-extrabold">1. כל המשפטים + הוכחות במצב נקי</span>
-                                    <span class="text-xs font-black px-2 py-0.5 rounded-md bg-white/20">פעיל</span>
-                                </div>
-                                <div class="text-[11px] opacity-90 leading-snug">ריבוע המשפט וצמוד אליו ריבוע ההוכחה ברצף (לפי שורות, בלי צבעים ובלי כותרות שלבים)</div>
-                            </button>
-
-                            <!-- מצב 2: כל המשפטים + הוכחות בסדר לימוד (צבוע ומחולק לשלבים) -->
-                            <button type="button" id="lmode-btn-study-proofs" onclick="setLandingDisplayMode('study-proofs')" class="p-3 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-indigo-50/60 hover:border-indigo-300 text-slate-900 text-right transition flex flex-col justify-between gap-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="text-xs sm:text-sm font-extrabold">2. כל המשפטים + הוכחות בסדר לימוד</span>
-                                    <span class="text-xs">🎨</span>
-                                </div>
-                                <div class="text-[11px] text-slate-600 leading-snug">המשפט, ההוכחה ברצף, וחלוקה לשלבים צבועים (כותרות השלבים בין המשבצות)</div>
-                            </button>
-
-                            <!-- מצב 3: כל המשפטים בלבד בסדר הקורס -->
-                            <button type="button" id="lmode-btn-statements-only" onclick="setLandingDisplayMode('statements-only')" class="p-3 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-indigo-50/60 hover:border-indigo-300 text-slate-900 text-right transition flex flex-col justify-between gap-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="text-xs sm:text-sm font-extrabold">3. כל המשפטים בסדר (ניסוח בלבד)</span>
-                                    <span class="text-xs">📋</span>
-                                </div>
-                                <div class="text-[11px] text-slate-600 leading-snug">רק מספר המשפט, שם המשפט וניסוח המשפט ברצף (לחיצה פותחת הוכחה מלאה)</div>
-                            </button>
-
-                            <!-- מצב 4: שכיחות ונתונים -->
-                            <button type="button" onclick="showView('exam-frequency')" class="p-3 rounded-2xl border-2 border-rose-200 bg-rose-50/60 hover:bg-rose-100/70 hover:border-rose-400 text-rose-950 text-right transition flex flex-col justify-between gap-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="text-xs sm:text-sm font-extrabold">4. שכיחות ונתונים (2015א–2026ב)</span>
-                                    <span class="text-xs">📊</span>
-                                </div>
-                                <div class="text-[11px] text-rose-800 leading-snug">טבלת שכיחויות של 44 המשפטים, מפת 25 מבחנים ודגשי בודקים</div>
-                            </button>
-                        </div>
-
-                        <!-- שורת כלים משלימים קומפקטית -->
-                        <div class="flex flex-wrap items-center gap-2 pt-1">
-                            <button type="button" onclick="showView('semester-filter')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 transition">
-                                ⚠️ בחירת וסינון משפטי הסמסטר (<span class="sem-active-count-lbl">44/44</span>)
-                            </button>
-                            <button type="button" onclick="showView('exam-sim')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-amber-50 text-slate-800 border border-slate-200 transition">
-                                📝 סימולציית 35 נק' (שאלה 1 + 2א)
-                            </button>
-                            <button type="button" onclick="showView('flashcards')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-purple-50 text-slate-800 border border-slate-200 transition">
-                                🃏 כרטיסיות שינון
-                            </button>
-                            <button type="button" onclick="showView('global-arena')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-sky-50 text-slate-800 border border-slate-200 transition">
-                                🕵️ בוחן "עיני הבודק" ומרתון
-                            </button>
+                        <div class="text-xs font-extrabold text-amber-800 flex items-center justify-between pt-2 border-t border-amber-200/80">
+                            <span class="sem-active-count-lbl">מופיעים הסמסטר: 44/44</span>
+                            <span class="group-hover:-translate-x-1 transition-transform">◀</span>
                         </div>
                     </div>
 
-                    <!-- שורה 2: מצבי סינון לפי סטטוס למידה ("המשפטים שלמדו, נשאר לנו, עושים מחדש") -->
+                    <!-- 2. סימולציית 35 נקודות -->
+                    <div onclick="showView('exam-sim')" class="cursor-pointer rounded-2xl bg-white border-2 border-slate-200/90 hover:border-indigo-400 hover:shadow-md p-4 transition flex flex-col justify-between gap-2.5 group">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center justify-center text-lg font-bold">📝</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">35 נק' בבחינה</span>
+                            </div>
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">סימולציית 35 נק' (שאלה 1+2א)</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                הגרלת מבחן אמת: משפט מלא להוכחה + סעיף יישום/משפט קצר עם טיימר ומחוון בדיקה רשמי.
+                            </p>
+                        </div>
+                        <div class="text-xs font-extrabold text-indigo-600 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>התחל סימולציה</span>
+                            <span class="group-hover:-translate-x-1 transition-transform">◀</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. כרטיסיות שינון -->
+                    <div onclick="showView('flashcards')" class="cursor-pointer rounded-2xl bg-white border-2 border-slate-200/90 hover:border-purple-400 hover:shadow-md p-4 transition flex flex-col justify-between gap-2.5 group">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 border border-purple-100 flex items-center justify-center text-lg font-bold">🃏</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">שליפה מהירה</span>
+                            </div>
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-purple-700 transition">כרטיסיות שינון</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                תרגול שליפה מהירה: הצגת ניסוח המשפט / שמו -> היזכרות ברעיון המרכזי והיפוך הכרטיסייה לבדיקה עצמית.
+                            </p>
+                        </div>
+                        <div class="text-xs font-extrabold text-purple-700 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>תרגול כרטיסיות</span>
+                            <span class="group-hover:-translate-x-1 transition-transform">◀</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. בוחן "עיני הבודק" ומרתון -->
+                    <div onclick="showView('global-arena')" class="cursor-pointer rounded-2xl bg-white border-2 border-slate-200/90 hover:border-emerald-400 hover:shadow-md p-4 transition flex flex-col justify-between gap-2.5 group">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg font-bold">🕵️</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">זיהוי מוקשים</span>
+                            </div>
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-emerald-700 transition">בוחן "עיני הבודק" ומרתון</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                אימון מתקדם באיתור שגיאות נפוצות של סטודנטים, זיהוי נקודות תורפה והורדות נקודות במחוון.
+                            </p>
+                        </div>
+                        <div class="text-xs font-extrabold text-emerald-700 flex items-center justify-between pt-2 border-t border-slate-100">
+                            <span>כניסה לבוחן בודקים</span>
+                            <span class="group-hover:-translate-x-1 transition-transform">◀</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- תיבת התוכן המרכזית (סטטוס סינון, סינון דינמי ורשימת המשפטים) -->
+                <div id="landing-fast-index-card" class="bg-white rounded-3xl border-2 border-slate-200/90 p-4 sm:p-6 shadow-xs space-y-4">
+                    <!-- שורת סינון לפי סטטוס למידה -->
                     <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50/90 p-3 rounded-2xl border border-slate-200/80">
                         <div class="flex flex-wrap items-center gap-1.5" id="landing-status-filters">
                             <span class="text-xs font-extrabold text-slate-700 ml-1">מצבי למידה וסינון:</span>
                             <button type="button" data-status-filter="all" onclick="setLandingStatusFilter('all')" class="landing-status-btn px-3 py-1 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow-2xs transition">כל המשפטים (44)</button>
-                            <button type="button" data-status-filter="unlearned" onclick="setLandingStatusFilter('unlearned')" class="landing-status-btn px-3 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-amber-50 transition">נשאר ללמוד (טרם נלמדו)</button>
+                            <button type="button" data-status-filter="unlearned" onclick="setLandingStatusFilter('unlearned')" class="landing-status-btn px-3 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-amber-50 transition">נשאר ללמוד</button>
                             <button type="button" data-status-filter="learned" onclick="setLandingStatusFilter('learned')" class="landing-status-btn px-3 py-1 rounded-xl text-xs font-semibold bg-white text-emerald-800 border border-emerald-200 hover:bg-emerald-50 transition">✔ המשפטים שנלמדו</button>
                             <button type="button" data-status-filter="starred" onclick="setLandingStatusFilter('starred')" class="landing-status-btn px-3 py-1 rounded-xl text-xs font-semibold bg-white text-amber-800 border border-amber-200 hover:bg-amber-50 transition">⭐ מסומנים לחזרה</button>
                             <button type="button" data-status-filter="26c" onclick="setLandingStatusFilter('26c')" class="landing-status-btn px-3 py-1 rounded-xl text-xs font-semibold bg-white text-indigo-800 border border-indigo-200 hover:bg-indigo-50 transition">🎯 מיקוד 2026ג (35)</button>
@@ -521,26 +570,10 @@
                         </button>
                     </div>
 
-                    <!-- שורה 3: סינון לפי יחידה (1-8) וחיפוש חופשי -->
-                    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50/90 p-3 rounded-2xl border border-slate-200/80">
-                        <div class="flex items-center gap-1.5 flex-wrap" id="landing-index-unit-filters">
-                            <span class="text-xs font-bold text-slate-700 ml-1">יחידה בקורס:</span>
-                            <button type="button" onclick="filterLandingIndexUnit('all')" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-2xs transition">הכל (44)</button>
-                            <button type="button" onclick="filterLandingIndexUnit(1)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 1</button>
-                            <button type="button" onclick="filterLandingIndexUnit(2)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 2</button>
-                            <button type="button" onclick="filterLandingIndexUnit(3)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 3</button>
-                            <button type="button" onclick="filterLandingIndexUnit(4)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 4</button>
-                            <button type="button" onclick="filterLandingIndexUnit(5)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 5</button>
-                            <button type="button" onclick="filterLandingIndexUnit(6)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 6</button>
-                            <button type="button" onclick="filterLandingIndexUnit(7)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 7</button>
-                            <button type="button" onclick="filterLandingIndexUnit(8)" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 transition">יח' 8</button>
-                        </div>
-                        <div class="relative w-full sm:w-64">
-                            <input type="text" id="landing-index-search" oninput="filterLandingIndexSearch(this.value)" placeholder="🔍 חיפוש משפט או מספר (למשל 5.48)..." class="w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-indigo-400">
-                        </div>
-                    </div>
+                    <!-- סרגל הסינון הדינמי המותאם למצב הנבחר (נבנה על ידי renderLandingFilterBar) -->
+                    <div id="landing-mode-filter-bar"></div>
 
-                    <!-- כל 44 המשפטים וההוכחות ברצף -->
+                    <!-- מיכל הצגת המשפטים -->
                     <div id="landing-units-grid" class="space-y-5"></div>
                 </div>
             </section>
@@ -1035,6 +1068,8 @@
     function escHtmlAttr(s) {
         return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
+    const escapeHtml = escHtmlAttr;
+    window.escapeHtml = escHtmlAttr;
 
     (function initDerivedBanks() {
         const allTricks = [];
@@ -5367,30 +5402,414 @@ window.SIM_RENDERERS = {
     window.landingDisplayMode = window.landingDisplayMode || 'clean-proofs';
     window.landingStatusFilter = window.landingStatusFilter || 'all';
 
+    function getTheoremShortLabel(tid) {
+        const t = window.THEOREMS_DB[tid];
+        if (!t) return tid;
+        const code = t.bookCode || '';
+        const title = t.title || '';
+        let prefix = "מ'";
+        if (code.includes('טענה') || title.includes('טענה')) prefix = "ט'";
+        else if (code.includes('למה') || title.includes('למה')) prefix = "ל'";
+        const match = (code || title).match(/[\d\.]+(?:\([א-ת]\))?/);
+        const num = match ? match[0] : (t.num || '');
+        return `${prefix} ${num}`;
+    }
+    window.getTheoremShortLabel = getTheoremShortLabel;
+
+    function jumpToCleanTheorem(tid) {
+        if (!window.cleanContinuousActive) {
+            window.cleanContinuousActive = true;
+            renderLandingFilterBar();
+            renderLandingUnitsGrid();
+        }
+        if (tid === 'all') {
+            window.landingCleanThmFilter = 'all';
+            renderLandingFilterBar();
+            renderLandingUnitsGrid();
+            const topEl = document.getElementById('landing-fast-index-card') || document.getElementById('landing-units-grid');
+            if (topEl) topEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        let card = document.getElementById('thm-clean-card-' + tid);
+        if (!card) {
+            window.landingCleanThmFilter = 'all';
+            window.landingIndexSearchQuery = '';
+            const searchInput = document.getElementById('landing-index-search');
+            if (searchInput) searchInput.value = '';
+            renderLandingUnitsGrid();
+            card = document.getElementById('thm-clean-card-' + tid);
+        }
+
+        window.landingCleanThmFilter = tid;
+        renderLandingFilterBar();
+
+        if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            card.classList.add('ring-4', 'ring-indigo-500', 'ring-offset-2');
+            setTimeout(() => {
+                card.classList.remove('ring-4', 'ring-indigo-500', 'ring-offset-2');
+            }, 2500);
+        }
+    }
+    window.jumpToCleanTheorem = jumpToCleanTheorem;
+
+    window.cleanContinuousActive = false;
+
+    function onTheoremSquareClick(tid) {
+        const mode = window.landingDisplayMode || 'clean-proofs';
+        if (mode === 'study-proofs') {
+            showTheorem(tid);
+        } else if (mode === 'clean-proofs') {
+            showCleanTheorem(tid);
+        } else if (mode === 'statements-only') {
+            showStatementsTheorem(tid);
+        }
+    }
+    window.onTheoremSquareClick = onTheoremSquareClick;
+
+    function showCleanTheorem(tid) {
+        window.cleanContinuousActive = true;
+        window.landingCleanThmFilter = tid || 'all';
+        renderLandingFilterBar();
+        renderLandingUnitsGrid();
+        setTimeout(() => {
+            const target = document.getElementById('thm-clean-card-' + tid);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.classList.add('ring-4', 'ring-indigo-500', 'ring-offset-2');
+                setTimeout(() => {
+                    target.classList.remove('ring-4', 'ring-indigo-500', 'ring-offset-2');
+                }, 2500);
+            }
+        }, 50);
+    }
+    window.showCleanTheorem = showCleanTheorem;
+
+    function showStatementsTheorem(tid) {
+        window.cleanContinuousActive = true;
+        window.landingCleanThmFilter = tid || 'all';
+        renderLandingFilterBar();
+        renderLandingUnitsGrid();
+        setTimeout(() => {
+            const target = document.getElementById('thm-clean-card-' + tid);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.classList.add('ring-4', 'ring-indigo-500', 'ring-offset-2');
+                setTimeout(() => {
+                    target.classList.remove('ring-4', 'ring-indigo-500', 'ring-offset-2');
+                }, 2500);
+            }
+        }, 50);
+    }
+    window.showStatementsTheorem = showStatementsTheorem;
+
+    function returnToSquaresIndex() {
+        window.cleanContinuousActive = false;
+        renderLandingFilterBar();
+        renderLandingUnitsGrid();
+        const target = document.getElementById('landing-fast-index-card') || document.getElementById('landing-units-grid');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    window.returnToSquaresIndex = returnToSquaresIndex;
+
+    function renderLandingFilterBar() {
+        const bar = document.getElementById('landing-mode-filter-bar');
+        if (!bar) return;
+        const activeList = getActiveTids();
+        const mode = window.landingDisplayMode || 'clean-proofs';
+        const isContinuous = !!window.cleanContinuousActive;
+
+        // If continuous view is active:
+        if (isContinuous) {
+            const activeChip = window.landingCleanThmFilter || 'all';
+            bar.innerHTML = `
+                <div class="space-y-3 bg-gradient-to-l from-indigo-50/80 via-white to-blue-50/80 p-3.5 sm:p-4 rounded-2xl border-2 border-indigo-200 shadow-2xs">
+                    <div class="flex flex-wrap items-center justify-between gap-2.5">
+                        <button type="button" onclick="returnToSquaresIndex()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-slate-900 hover:bg-slate-800 text-white shadow-2xs transition">
+                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                            <span>חזרה לאינדקס הריבועים ◀</span>
+                        </button>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="printContinuousPdf()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-2xs transition">
+                                <span class="material-symbols-outlined text-[18px]">print</span>
+                                <span>הדפס כ-PDF</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 custom-scroll" id="landing-clean-thm-chips">
+                        <span class="text-xs font-bold text-slate-700 shrink-0 ml-1">קפיצה למשפט:</span>
+                        <button type="button" data-tid="all" onclick="jumpToCleanTheorem('all')" class="clean-thm-chip px-2.5 py-1 rounded-xl text-xs font-bold ${activeChip === 'all' ? 'bg-indigo-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50'} transition shrink-0">הכל (${activeList.length})</button>
+                        ${activeList.map(tid => {
+                            const lbl = getTheoremShortLabel(tid);
+                            const isMatch = (activeChip === tid);
+                            return `<button type="button" data-tid="${tid}" onclick="jumpToCleanTheorem('${tid}')" class="clean-thm-chip px-2.5 py-1 rounded-xl text-xs ${isMatch ? 'bg-indigo-600 text-white shadow-2xs font-extrabold' : 'bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50 font-semibold'} transition shrink-0" title="${escapeHtml(window.THEOREMS_DB[tid].title)}">${lbl}</button>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Squares Overview Bar (Default for ALL 3 modes on landing):
+        const selectedUnit = window.landingIndexUnitFilter || 'all';
+
+        let topPdfBannerHtml = '';
+        if (mode === 'clean-proofs') {
+            topPdfBannerHtml = `
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 sm:p-4 bg-gradient-to-l from-indigo-50 via-white to-blue-50/90 rounded-2xl border-2 border-indigo-200 shadow-2xs">
+                    <div class="flex items-center gap-3">
+                        <span class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl shrink-0 shadow-2xs">📄</span>
+                        <div>
+                            <div class="text-sm sm:text-base font-black text-indigo-950 flex flex-wrap items-center gap-2">
+                                <span>מצב נקי: ניסוח + הוכחה מלאה ברצף</span>
+                                <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-extrabold border border-indigo-200">${activeList.length} משפטים פעילים</span>
+                            </div>
+                            <div class="text-xs text-slate-600 mt-0.5 leading-snug">
+                                לחיצה על כל ריבוע משפט מעבירה ישירות למיקום המשפט במצב נקי (ללא כותרות שלבים וללא סימולטור)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="showCleanTheorem('${activeList[0] || 't1'}')" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white hover:bg-indigo-50 text-indigo-800 border-2 border-indigo-300 shadow-2xs transition">
+                            <span class="material-symbols-outlined text-[18px]">menu_book</span>
+                            <span>צפה ברצף מ-1.43</span>
+                        </button>
+                        <button type="button" onclick="printContinuousPdf()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-md hover:shadow-lg transition transform hover:scale-[1.01]">
+                            <span class="material-symbols-outlined text-[19px]">print</span>
+                            <span>הדפס כ-PDF מלא</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else if (mode === 'statements-only') {
+            topPdfBannerHtml = `
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 sm:p-4 bg-gradient-to-l from-indigo-50 via-white to-blue-50/90 rounded-2xl border-2 border-indigo-200 shadow-2xs">
+                    <div class="flex items-center gap-3">
+                        <span class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl shrink-0 shadow-2xs">📋</span>
+                        <div>
+                            <div class="text-sm sm:text-base font-black text-indigo-950 flex flex-wrap items-center gap-2">
+                                <span>מצב ניסוחים בלבד</span>
+                                <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-extrabold border border-indigo-200">${activeList.length} ניסוחי משפטים</span>
+                            </div>
+                            <div class="text-xs text-slate-600 mt-0.5 leading-snug">
+                                לחיצה על כל ריבוע משפט מעבירה לניסוח המשפט ברצף
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="showStatementsTheorem('${activeList[0] || 't1'}')" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white hover:bg-indigo-50 text-indigo-800 border-2 border-indigo-300 shadow-2xs transition">
+                            <span class="material-symbols-outlined text-[18px]">menu_book</span>
+                            <span>צפה ברצף מ-1.43</span>
+                        </button>
+                        <button type="button" onclick="printContinuousPdf()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-md hover:shadow-lg transition transform hover:scale-[1.01]">
+                            <span class="material-symbols-outlined text-[19px]">print</span>
+                            <span>הדפס כ-PDF ניסוחים</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Mode 2: study-proofs
+            topPdfBannerHtml = `
+                <div class="flex items-center justify-between p-3 bg-indigo-50/70 rounded-2xl border border-indigo-100 text-xs text-indigo-950 font-bold">
+                    <span>🎨 מצב לימוד מעמיק: לחיצה על כל ריבוע משפט פותחת עמוד לימוד מלא עם שלבים מפורטים, אינטואיציה ויזואלית וסימולטור חי.</span>
+                    <button type="button" onclick="showView('semester-filter')" class="text-indigo-700 underline font-extrabold">סינון משפטים ◀</button>
+                </div>
+            `;
+        }
+
+        bar.innerHTML = `
+            <div class="space-y-3">
+                ${topPdfBannerHtml}
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50/90 p-3 rounded-2xl border border-slate-200/80">
+                    <div class="flex items-center gap-1.5 flex-wrap" id="landing-index-unit-filters">
+                        <span class="text-xs font-bold text-slate-700 ml-1">סינון לפי יחידה:</span>
+                        <button type="button" onclick="filterLandingIndexUnit('all')" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-bold ${selectedUnit === 'all' ? 'bg-indigo-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50'} transition">הכל (${activeList.length})</button>
+                        ${[1, 2, 3, 4, 5, 6, 7, 8].map(u => {
+                            const isSel = String(selectedUnit) === String(u);
+                            return `<button type="button" onclick="filterLandingIndexUnit(${u})" class="landing-u-btn px-2.5 py-1 rounded-xl text-xs font-semibold ${isSel ? 'bg-indigo-600 text-white shadow-2xs font-bold' : 'bg-white text-slate-700 border border-slate-200 hover:bg-indigo-50'} transition">יח' ${u}</button>`;
+                        }).join('')}
+                    </div>
+                    <div class="relative w-full sm:w-64">
+                        <input type="text" id="landing-index-search" oninput="filterLandingIndexSearch(this.value)" value="${escapeHtml(window.landingIndexSearchQuery || '')}" placeholder="חיפוש משפט באינדקס..." class="w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-indigo-400">
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    window.renderLandingFilterBar = renderLandingFilterBar;
+
+    function printContinuousPdf() {
+        const activeList = getActiveTids();
+        const totalCount = window.ORDERED_TIDS.length;
+        const mode = window.landingDisplayMode || 'clean-proofs';
+        const isCleanProofs = (mode !== 'statements-only');
+
+        let printContainer = document.getElementById('pdf-printable-container');
+        if (!printContainer) {
+            printContainer = document.createElement('div');
+            printContainer.id = 'pdf-printable-container';
+            document.body.appendChild(printContainer);
+        }
+
+        let html = `
+            <div class="print-doc-wrapper font-sans text-slate-900 dir-rtl p-0" dir="rtl" style="font-family: 'Heebo', 'Rubik', sans-serif;">
+        `;
+
+        // 1. RENDER EACH THEOREM ON ITS OWN DEDICATED PAGE
+        // Starts directly on page 1 with theorem 1 (1.43), NO repeated header line!
+        activeList.forEach((tid, idx) => {
+            const t = window.THEOREMS_DB[tid];
+            const semOrd = idx + 1;
+            const pureProofHtml = isCleanProofs ? buildPureProofContinuousHtml(t, tid) : '';
+            const isFirstPage = (idx === 0);
+
+            html += `
+                <div class="print-theorem-page" style="page-break-after: always; break-after: page; padding: 6px 0 14px 0; box-sizing: border-box;">
+                    <div>
+                        ${isFirstPage ? `
+                            <div style="font-size: 11.5px; font-weight: 800; color: #4338ca; border-bottom: 2px solid #e0e7ff; padding-bottom: 6px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <span>חשבון אינפיניטסימלי 1 (20474) • משפטי ההוכחה לבחינה (לפי סינון הסמסטר): ${activeList.length} מתוך ${totalCount} משפטים פעילים</span>
+                                <span style="background-color: #4f46e5; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-size: 10.5px;">אינפי 1</span>
+                            </div>
+                        ` : ''}
+
+                        <!-- שורת מטא המשפט -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 8px; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span style="background-color: #0f172a; color: #ffffff; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 800;">#${semOrd} • ${t.bookCode}</span>
+                                ${t.bookLoc ? `<span style="font-size: 12px; color: #475569; font-weight: 600;">📖 ${t.bookLoc}</span>` : ''}
+                                <span style="font-size: 11.5px; color: #9f1239; background-color: #fff1f2; padding: 2px 8px; border-radius: 4px; border: 1px solid #fecdd3; font-weight: 700;">🔥 שכיחות במבחנים: ${t.examFreq} מועדים</span>
+                            </div>
+                            <div style="font-size: 12px; color: #64748b; font-weight: 700;">יחידה ${t.unit}</div>
+                        </div>
+
+                        <!-- שם המשפט -->
+                        <h2 style="font-size: 17px; font-weight: 900; color: #0f172a; margin: 0 0 10px 0; line-height: 1.4;">${formatBidiMathHtml(t.title)}</h2>
+
+                        <!-- ניסוח המשפט -->
+                        <div style="background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 13px 16px; font-size: 13.5px; line-height: 1.65; color: #0f172a; margin-bottom: 12px;">
+                            <div style="font-size: 11.5px; font-weight: 800; color: #475569; margin-bottom: 4px;">ניסוח המשפט:</div>
+                            ${t.statement}
+                        </div>
+
+                        <!-- הוכחה נקייה ברצף (אם במצב הוכחות) -->
+                        ${isCleanProofs ? `
+                            <div style="background-color: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 13px 16px; font-size: 13.5px; line-height: 1.65; color: #0f172a;">
+                                <div style="font-size: 11.5px; font-weight: 800; color: #3730a3; margin-bottom: 5px;">הוכחה מלאה ברצף (כפי שכותבים במחברת הבחינה):</div>
+                                <div style="space-y: 3px;">${pureProofHtml}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- קישור ישיר למשפט באתר בתחתית כל עמוד -->
+                    <div style="border-top: 1.5px solid #e2e8f0; padding-top: 8px; margin-top: 14px; font-size: 11px; color: #475569; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <span>🔗 לצפייה בפירוק ההוכחה לשלבים, הסבר מפורט וסימולטור אינטראקטיבי באתר:</span>
+                        <a href="https://infi-1.pages.dev/profs.html#${tid}" target="_blank" style="color: #1d4ed8; text-decoration: underline; font-weight: 800;">https://infi-1.pages.dev/profs.html#${tid}</a>
+                    </div>
+                </div>
+            `;
+        });
+
+        // 2. THE FINAL PAGE: Comprehensive site explanation & big link to https://infi-1.pages.dev/
+        html += `
+            <div class="print-final-page" style="page-break-before: always; break-before: page; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px 15px; box-sizing: border-box;">
+                <div style="max-width: 680px; width: 100%; border: 3px solid #6366f1; background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%); border-radius: 24px; padding: 36px 32px; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);">
+                    <div style="display: inline-block; background-color: #4f46e5; color: #ffffff; padding: 6px 16px; border-radius: 9999px; font-size: 13px; font-weight: 800; margin-bottom: 8px;">
+                        חשבון אינפיניטסימלי 1 (20474) • האוניברסיטה הפתוחה
+                    </div>
+                    <h1 style="font-size: 26px; font-weight: 900; color: #1e1b4b; margin: 8px 0;">
+                        האתר הלימודי המלא — אינפי 1
+                    </h1>
+                    <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 8px 0 16px 0;">
+                        חוברת משפטי ההוכחה הופקה מתוך מאגר ההוכחות והסיכומים המעודכן לבחינות 2015א–2026ב (${activeList.length} מתוך ${totalCount} משפטים פעילים).
+                    </p>
+
+                    <!-- כרטיס הזמנה מקיף לאתר המלא -->
+                    <div style="background-color: #ffffff; border: 2px solid #c7d2fe; border-radius: 16px; padding: 22px; text-align: right; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                        <div style="font-size: 17px; font-weight: 900; color: #312e81; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                            <span>🌐 מוזמנים להיכנס לאתר המלא:</span>
+                            <a href="https://infi-1.pages.dev/" target="_blank" style="color: #1d4ed8; text-decoration: underline; font-weight: 900; font-size: 18px;">https://infi-1.pages.dev/</a>
+                        </div>
+                        <p style="font-size: 13.5px; color: #1e293b; line-height: 1.7; margin-bottom: 12px;">
+                            באתר המלא תמצאו פירוט מקיף ועזרה אינטראקטיבית בכל שלב בלמידה:
+                        </p>
+                        <ul style="font-size: 13px; color: #334155; line-height: 1.8; margin-right: 20px; list-style-type: disc;">
+                            <li><strong>פירוק כל הוכחה לשלבים מובנים וצבועים</strong> — שלב אחר שלב עם שאלות מנחות.</li>
+                            <li><strong>מעבדת סימולציות גרפיות חיות</strong> — הזזת משתנים, המחשת גבולות, סדרות ופונקציות בעיניים.</li>
+                            <li><strong>דגשי בדיקה ומלכודות נפוצות</strong> — כל הנקודות שבהן בודקי בחינות מורידים נקודות יקרות.</li>
+                            <li><strong>כרטיסיות שינון מהיר (Active Recall)</strong> — שליפת רעיונות מפתח בלחיצה והיפוך כרטיסייה.</li>
+                            <li><strong>מאגר שאלות אמריקאיות ובוחן "עיני הבודק"</strong> — איתור טעויות בהוכחות לדוגמה.</li>
+                            <li><strong>סימולציית מבחן אמת של 35 נקודות</strong> — שאלת הוכחה מלאה (15–20 נק') + סעיף יישום (15–20 נק') עם טיימר ומחוון רשמי.</li>
+                        </ul>
+                        <div style="margin-top: 16px; padding-top: 12px; border-top: 1.5px solid #e0e7ff; font-size: 14px; font-weight: 800; color: #1e40af; text-align: center;">
+                            🔗 לחצו למעבר ישיר לאתר: <a href="https://infi-1.pages.dev/" target="_blank" style="color: #1d4ed8; text-decoration: underline;">https://infi-1.pages.dev/</a>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 12px; color: #64748b; margin-top: 16px;">
+                        הופק מתוך מאגר ההוכחות והסיכומים לאינפי 1 • בהצלחה רבה בבחינה!
+                    </div>
+                </div>
+            </div>
+        `;
+
+        html += `</div>`;
+
+        printContainer.innerHTML = html;
+        if (window.renderMathInContainer) {
+            window.renderMathInContainer(printContainer);
+        }
+
+        document.body.classList.add('is-printing-pdf');
+
+        const cleanUpPrint = () => {
+            document.body.classList.remove('is-printing-pdf');
+            window.removeEventListener('afterprint', cleanUpPrint);
+        };
+        window.addEventListener('afterprint', cleanUpPrint);
+
+        showAppToast('פותח חלון הדפסה / שמירה כ-PDF...');
+
+        setTimeout(() => {
+            window.print();
+            setTimeout(cleanUpPrint, 3000);
+        }, 250);
+    }
+    window.printContinuousPdf = printContinuousPdf;
+
     function setLandingDisplayMode(mode) {
+        if (mode === 'exam-frequency') {
+            showView('exam-frequency');
+            return;
+        }
         window.landingDisplayMode = mode || 'clean-proofs';
+        window.cleanContinuousActive = false;
         const modes = [
-            { id: 'clean-proofs', title: '1. כל המשפטים + הוכחות במצב נקי', sub: 'ריבוע המשפט וצמוד אליו ריבוע ההוכחה ברצף (לפי שורות, בלי צבעים ובלי כותרות שלבים)', icon: '📄' },
-            { id: 'study-proofs', title: '2. כל המשפטים + הוכחות בסדר לימוד', sub: 'המשפט, ההוכחה ברצף, וחלוקה לשלבים צבועים (כותרות השלבים בין המשבצות)', icon: '🎨' },
-            { id: 'statements-only', title: '3. כל המשפטים בסדר (ניסוח בלבד)', sub: 'רק מספר המשפט, שם המשפט וניסוח המשפט ברצף (לחיצה פותחת הוכחה מלאה)', icon: '📋' }
+            { id: 'clean-proofs', title: '1. כל המשפטים + הוכחות במצב נקי', sub: 'המשפט וההוכחה ברצף נקי, כפי שכותבים במחברת הבחינה', icon: '📄' },
+            { id: 'study-proofs', title: '2. כל המשפטים + הוכחות בסדר לימוד', sub: 'אינדקס משפטים לפי יחידות: בחירה בריבוע, שכיחות וכניסה להוכחה מלאה וסימולטור', icon: '🎨' },
+            { id: 'statements-only', title: '3. כל המשפטים בסדר (ניסוח בלבד)', sub: 'ניסוח המשפט והנוסחאות בלבד ברצף, לחיצה פותחת את ההוכחה המלאה', icon: '📋' }
         ];
         modes.forEach(m => {
             const btn = document.getElementById('lmode-btn-' + m.id);
             if (!btn) return;
             const isAct = (m.id === window.landingDisplayMode);
             btn.className = isAct
-                ? 'p-3 rounded-2xl border-2 border-indigo-600 bg-indigo-600 text-white text-right transition shadow-sm flex flex-col justify-between gap-1'
-                : 'p-3 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-indigo-50/60 hover:border-indigo-300 text-slate-900 text-right transition flex flex-col justify-between gap-1';
+                ? 'p-3 rounded-2xl border-2 border-indigo-400 bg-indigo-600 text-white text-right transition shadow-md flex flex-col justify-between gap-1.5 ring-2 ring-indigo-300/40'
+                : 'p-3 rounded-2xl border-2 border-white/20 bg-white/10 hover:bg-white/15 text-white text-right transition flex flex-col justify-between gap-1.5 shadow-2xs';
             btn.innerHTML = `
                 <div class="flex items-center justify-between gap-2">
                     <span class="text-xs sm:text-sm font-extrabold">${m.title}</span>
                     ${isAct ? '<span class="text-xs font-black px-2 py-0.5 rounded-md bg-white/20">פעיל</span>' : `<span class="text-xs">${m.icon}</span>`}
                 </div>
-                <div class="text-[11px] ${isAct ? 'opacity-90' : 'text-slate-600'} leading-snug">${m.sub}</div>
+                <div class="text-[11px] ${isAct ? 'opacity-90' : 'text-indigo-200/90'} leading-snug">${m.sub}</div>
             `;
         });
+        renderLandingFilterBar();
         renderLandingUnitsGrid();
     }
+    window.setLandingDisplayMode = setLandingDisplayMode;
 
     function setLandingStatusFilter(statusMode) {
         window.landingStatusFilter = statusMode || 'all';
@@ -5403,6 +5822,7 @@ window.SIM_RENDERERS = {
         });
         renderLandingUnitsGrid();
     }
+    window.setLandingStatusFilter = setLandingStatusFilter;
 
     function resetLearnedProgress() {
         window.masteredSet.clear();
@@ -5411,14 +5831,15 @@ window.SIM_RENDERERS = {
         renderLandingUnitsGrid();
         showAppToast('סימוני המשפטים שנלמדו אופסו — מתחילים מחדש!');
     }
+    window.resetLearnedProgress = resetLearnedProgress;
 
     function renderLandingUnitsGrid() {
         const grid = document.getElementById('landing-units-grid');
         if (!grid) return;
         const activeList = getActiveTids();
-        const selectedUnit = window.landingIndexUnitFilter || 'all';
         const statusFilter = window.landingStatusFilter || 'all';
         const displayMode = window.landingDisplayMode || 'clean-proofs';
+        const isContinuous = !!window.cleanContinuousActive;
         const q = (window.landingIndexSearchQuery || '').trim().toLowerCase();
 
         // Update status filter counts
@@ -5437,147 +5858,181 @@ window.SIM_RENDERERS = {
             else if (fType === 'starred') btn.textContent = `⭐ מסומנים לחזרה (${starredCount})`;
         });
 
-        let html = '';
-        for (let u = 1; u <= 8; u++) {
-            if (selectedUnit !== 'all' && String(selectedUnit) !== String(u)) continue;
-            let uTids = activeList.filter(tid => window.THEOREMS_DB[tid].unit === u);
+        // 1. DEFAULT SQUARES OVERVIEW GRID (Used for all 3 modes on landing):
+        if (!isContinuous) {
+            const selectedUnit = window.landingIndexUnitFilter || 'all';
+            let html = '';
+            for (let u = 1; u <= 8; u++) {
+                if (selectedUnit !== 'all' && String(selectedUnit) !== String(u)) continue;
+                let uTids = activeList.filter(tid => window.THEOREMS_DB[tid].unit === u);
 
-            if (statusFilter === 'unlearned') {
-                uTids = uTids.filter(tid => !window.masteredSet.has(tid));
-            } else if (statusFilter === 'learned') {
-                uTids = uTids.filter(tid => window.masteredSet.has(tid));
-            } else if (statusFilter === 'starred') {
-                uTids = uTids.filter(tid => window.starredSet.has(tid));
-            } else if (statusFilter === '26c') {
-                uTids = uTids.filter(tid => !!window.THEOREMS_DB[tid].in26c);
-            } else if (statusFilter === 'high') {
-                uTids = uTids.filter(tid => window.THEOREMS_DB[tid].examFreq >= 5);
-            }
-
-            if (q) {
-                uTids = uTids.filter(tid => {
-                    const t = window.THEOREMS_DB[tid];
-                    const fullText = `${t.title} ${t.bookCode || ''} ${t.bookLoc || ''} ${t.category || ''} ${t.statement || ''} ${tid}`.toLowerCase();
-                    return fullText.includes(q);
-                });
-            }
-            if (!uTids.length) continue;
-
-            const cardsHtml = uTids.map(tid => {
-                const t = window.THEOREMS_DB[tid];
-                const semOrd = activeList.indexOf(tid) + 1;
-                const isM = window.masteredSet.has(tid);
-                const isS = window.starredSet.has(tid);
-                const pureProofHtml = buildPureProofContinuousHtml(t, tid);
-
-                // Top header bar inside the theorem box
-                const headerBarHtml = `
-                    <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-200/80">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="px-2.5 py-0.5 rounded-lg bg-slate-900 text-white text-xs font-extrabold">#${semOrd} • ${t.bookCode}</span>
-                            ${t.bookLoc ? `<span class="text-xs font-semibold text-slate-500">📖 ${t.bookLoc}</span>` : ''}
-                            ${buildFreqBadgeJS(t.examFreq, getFreqTier(t.examFreq), true)}
-                        </div>
-                        <div class="flex items-center gap-1.5 flex-wrap" onclick="event.stopPropagation()">
-                            <button type="button" onclick="toggleMastered('${tid}'); renderLandingUnitsGrid();" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition ${isM ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-emerald-50'}">
-                                ${isM ? '✔ נלמד' : 'סמן כנלמד'}
-                            </button>
-                            <button type="button" onclick="toggleStarred('${tid}'); renderLandingUnitsGrid();" class="px-2 py-1 rounded-lg text-xs font-bold border transition ${isS ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-white text-slate-600 border-slate-200 hover:bg-amber-50'}">
-                                ${isS ? '⭐ מסומן' : '☆'}
-                            </button>
-                            <button type="button" onclick="copyFullProofText('${tid}')" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
-                                📋 העתק
-                            </button>
-                            <button type="button" onclick="showTheorem('${tid}')" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white shadow-2xs transition">
-                                פתח שלבים, הסברים וסימולטור ◀
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                if (displayMode === 'statements-only') {
-                    // מצב 3: רק המשפטים ברצף (מספר המשפט + שם המשפט + תוכן המשפט, לחיצה פותחת את המשפט וכל השלבים)
-                    return `
-                        <div onclick="showTheorem('${tid}')" class="cursor-pointer rounded-2xl border-2 ${isM ? 'border-emerald-300 bg-white' : 'border-slate-300 bg-white'} hover:border-indigo-500 hover:shadow-md p-4 sm:p-5 transition group">
-                            ${headerBarHtml}
-                            <div class="space-y-1.5">
-                                <h4 class="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-indigo-700 transition">${formatBidiMathHtml(t.title)}</h4>
-                                <div class="text-sm sm:text-base text-slate-800 leading-relaxed pt-1">${t.statement}</div>
-                            </div>
-                        </div>
-                    `;
+                if (statusFilter === 'unlearned') {
+                    uTids = uTids.filter(tid => !window.masteredSet.has(tid));
+                } else if (statusFilter === 'learned') {
+                    uTids = uTids.filter(tid => window.masteredSet.has(tid));
+                } else if (statusFilter === 'starred') {
+                    uTids = uTids.filter(tid => window.starredSet.has(tid));
+                } else if (statusFilter === '26c') {
+                    uTids = uTids.filter(tid => !!window.THEOREMS_DB[tid].in26c);
+                } else if (statusFilter === 'high') {
+                    uTids = uTids.filter(tid => window.THEOREMS_DB[tid].examFreq >= 5);
                 }
 
-                if (displayMode === 'study-proofs') {
-                    // מצב 2: המשפט + ההוכחה ברצף + החלוקה הצבועה לשלבים (כותרות בין המשבצות)
-                    const coloredStepsHtml = buildColoredStepsProofHtml(t, tid, false);
-                    return `
-                        <div onclick="showTheorem('${tid}')" class="cursor-pointer rounded-2xl border-2 ${isM ? 'border-emerald-300' : 'border-slate-300'} hover:border-indigo-500 bg-white overflow-hidden shadow-2xs hover:shadow-md transition group">
-                            <!-- ריבוע 1: המשפט -->
-                            <div class="p-4 sm:p-5 bg-white">
-                                ${headerBarHtml}
-                                <h4 class="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-indigo-700 transition mb-1.5">${formatBidiMathHtml(t.title)}</h4>
-                                <div class="text-sm sm:text-base font-medium text-slate-900 leading-relaxed">${t.statement}</div>
-                            </div>
-                            <!-- ריבוע 2 צמוד: ההוכחה ברצף בלי חלוקה לשלבים -->
-                            <div class="p-4 sm:p-5 bg-slate-50/60 border-t-2 border-slate-200 space-y-1.5">
-                                <div class="text-xs font-extrabold text-slate-700">הוכחה מלאה ברצף (ללא חלוקה לשלבים):</div>
-                                <div class="space-y-1">${pureProofHtml}</div>
-                            </div>
-                            <!-- ריבוע 3 צמוד: חלוקה לשלבים צבועה (כותרות השלבים בין המשבצות) -->
-                            <div class="p-4 sm:p-5 bg-white border-t-2 border-slate-200 space-y-2">
-                                <div class="text-xs font-extrabold text-indigo-800">חלוקה לשלבים צבועה (לחצו לפתיחת ההסברים המפורטים לכל שלב):</div>
-                                <div class="space-y-2">${coloredStepsHtml}</div>
-                            </div>
-                        </div>
-                    `;
+                if (q) {
+                    uTids = uTids.filter(tid => {
+                        const t = window.THEOREMS_DB[tid];
+                        const fullText = `${t.title} ${t.bookCode || ''} ${t.bookLoc || ''} ${t.category || ''} ${tid}`.toLowerCase();
+                        return fullText.includes(q);
+                    });
                 }
+                if (!uTids.length) continue;
 
-                // מצב 1 (ברירת מחדל — 'clean-proofs'):
-                // כל המשפטים + הוכחות במצב נקי: ריבוע המשפט וצמוד אליו ריבוע ההוכחה ברצף (מחולקת לפי שורות, בלי צבעים ובלי "שלב 1...")
-                return `
-                    <div onclick="showTheorem('${tid}')" class="cursor-pointer rounded-2xl border-2 ${isM ? 'border-emerald-300' : 'border-slate-300'} hover:border-indigo-500 bg-white overflow-hidden shadow-2xs hover:shadow-md transition group">
-                        <!-- ריבוע המשפט -->
-                        <div class="p-4 sm:p-5 bg-white">
-                            ${headerBarHtml}
-                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-indigo-700 transition mb-1.5">${formatBidiMathHtml(t.title)}</h4>
-                            <div class="text-sm sm:text-base font-medium text-slate-900 leading-relaxed">${t.statement}</div>
-                        </div>
-                        <!-- ריבוע ההוכחה צמוד מיד אחריו — נקי לחלוטין, בלי צבעים ובלי כותרות שלבים -->
-                        <div class="p-4 sm:p-5 bg-white border-t-2 border-slate-200">
-                            <div class="text-xs font-extrabold text-slate-700 mb-1.5">הוכחה:</div>
-                            <div class="space-y-1 text-slate-900 leading-relaxed">${pureProofHtml}</div>
-                        </div>
+                html += `<div class="space-y-2.5">
+                    <div class="flex items-center justify-between bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200/80">
+                        <h3 class="text-xs sm:text-sm font-extrabold text-indigo-950">${UNIT_NAMES[u]}</h3>
+                        <span class="text-[11px] font-semibold text-slate-500">${uTids.length} משפטים מוצגים</span>
                     </div>
-                `;
-            }).join('');
-
-            html += `<div class="space-y-3.5">
-                <div class="flex items-center justify-between bg-slate-100 px-4 py-2.5 rounded-2xl border border-slate-200">
-                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900">${UNIT_NAMES[u]}</h3>
-                    <span class="text-xs font-bold text-slate-600">${uTids.length} משפטים</span>
-                </div>
-                <div class="space-y-4">
-                    ${cardsHtml}
-                </div>
-            </div>`;
-        }
-
-        if (!html) {
-            if (q || statusFilter !== 'all' || selectedUnit !== 'all') {
-                html = `<div class="text-center py-8 text-sm text-slate-600 bg-slate-50/60 rounded-2xl border border-dashed border-slate-300 p-6">
-                    <div class="text-base font-bold text-slate-800 mb-1">לא נמצאו משפטים התואמים לסינון הנוכחי</div>
-                    <button type="button" onclick="const input = document.getElementById('landing-index-search'); if (input) input.value=''; window.landingIndexSearchQuery=''; setLandingStatusFilter('all'); filterLandingIndexUnit('all');" class="text-xs text-indigo-600 font-bold hover:underline mt-2">נקה סינון והצג את כל 44 המשפטים</button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                        ${uTids.map(tid => {
+                            const t = window.THEOREMS_DB[tid];
+                            const semOrd = activeList.indexOf(tid) + 1;
+                            const isM = window.masteredSet.has(tid);
+                            const isS = window.starredSet.has(tid);
+                            return `<div onclick="onTheoremSquareClick('${tid}')" class="cursor-pointer rounded-2xl border ${isM ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200/90 bg-white'} hover:border-indigo-400 hover:shadow-md p-3 shadow-2xs transition flex items-start justify-between gap-2 group">
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                                        <span class="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-800 text-[10px] font-extrabold border border-indigo-100">#${semOrd} • ${t.bookCode}</span>
+                                        ${t.bookLoc ? `<span class="text-[10px] font-medium text-slate-500">${t.bookLoc}</span>` : ''}
+                                        ${isM ? '<span class="text-[11px] font-bold text-emerald-600">✔ נלמד</span>' : ''}
+                                        ${isS ? '<span class="text-[11px] font-bold text-amber-500">⭐</span>' : ''}
+                                    </div>
+                                    <div class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-indigo-600 leading-snug transition-colors">${formatBidiMathHtml(t.title)}</div>
+                                </div>
+                                ${buildFreqBadgeJS(t.examFreq, getFreqTier(t.examFreq), true)}
+                            </div>`;
+                        }).join('')}
+                    </div>
                 </div>`;
-            } else {
-                html = `<div class="text-center py-8 text-sm text-slate-600">לא נבחרו משפטים לסמסטר זה. <button type="button" onclick="showView('semester-filter')" class="text-indigo-600 font-bold underline">לחצו כאן לבחירת משפטי הסמסטר</button>.</div>`;
             }
+            if (!html) {
+                if (q) {
+                    html = `<div class="text-center py-8 text-sm text-slate-600 bg-slate-50/60 rounded-2xl border border-dashed border-slate-300 p-6">
+                        <div class="text-base font-bold text-slate-800 mb-1">לא נמצאו משפטים התואמים לחיפוש "${q}"</div>
+                        <button type="button" onclick="const input = document.getElementById('landing-index-search'); if (input) input.value=''; filterLandingIndexSearch('');" class="text-xs text-indigo-600 font-bold hover:underline mt-2">נקה חיפוש והצג את כל המשפטים</button>
+                    </div>`;
+                } else {
+                    html = `<div class="text-center py-8 text-sm text-slate-600">לא נבחרו משפטים לסמסטר זה. <button type="button" onclick="showView('semester-filter')" class="text-indigo-600 font-bold underline">לחצו כאן לבחירת משפטי הסמסטר</button>.</div>`;
+                }
+            }
+            grid.innerHTML = html;
+            if (window.renderMathInContainer) {
+                window.renderMathInContainer(grid);
+            }
+            return;
         }
-        grid.innerHTML = html;
+
+        // 2. CONTINUOUS FULL VIEW (Opened when clicking a square or "צפה ברצף"):
+        let filteredTids = [...activeList];
+        if (statusFilter === 'unlearned') {
+            filteredTids = filteredTids.filter(tid => !window.masteredSet.has(tid));
+        } else if (statusFilter === 'learned') {
+            filteredTids = filteredTids.filter(tid => window.masteredSet.has(tid));
+        } else if (statusFilter === 'starred') {
+            filteredTids = filteredTids.filter(tid => window.starredSet.has(tid));
+        } else if (statusFilter === '26c') {
+            filteredTids = filteredTids.filter(tid => !!window.THEOREMS_DB[tid].in26c);
+        } else if (statusFilter === 'high') {
+            filteredTids = filteredTids.filter(tid => window.THEOREMS_DB[tid].examFreq >= 5);
+        }
+
+        if (q) {
+            filteredTids = filteredTids.filter(tid => {
+                const t = window.THEOREMS_DB[tid];
+                const fullText = `${t.title} ${t.bookCode || ''} ${t.bookLoc || ''} ${t.category || ''} ${t.statement || ''} ${tid}`.toLowerCase();
+                return fullText.includes(q);
+            });
+        }
+
+        if (!filteredTids.length) {
+            grid.innerHTML = q
+                ? `<div class="text-center py-8 text-sm text-slate-600 bg-slate-50/60 rounded-2xl border border-dashed border-slate-300 p-6">
+                    <div class="text-base font-bold text-slate-800 mb-1">לא נמצאו משפטים התואמים לחיפוש "${q}"</div>
+                    <button type="button" onclick="const input = document.getElementById('landing-index-search'); if (input) input.value=''; filterLandingIndexSearch('');" class="text-xs text-indigo-600 font-bold hover:underline mt-2">נקה חיפוש והצג את כל המשפטים</button>
+                </div>`
+                : `<div class="text-center py-8 text-sm text-slate-600">לא נבחרו משפטים לסמסטר זה. <button type="button" onclick="showView('semester-filter')" class="text-indigo-600 font-bold underline">לחצו כאן לבחירת משפטי הסמסטר</button>.</div>`;
+            return;
+        }
+
+        const cardsHtml = filteredTids.map(tid => {
+            const t = window.THEOREMS_DB[tid];
+            const semOrd = activeList.indexOf(tid) + 1;
+            const isM = window.masteredSet.has(tid);
+            const isS = window.starredSet.has(tid);
+            const pureProofHtml = buildPureProofContinuousHtml(t, tid);
+
+            const headerBarHtml = `
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-200/80">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-slate-900 text-white text-xs font-extrabold">#${semOrd} • ${t.bookCode}</span>
+                        ${t.bookLoc ? `<span class="text-xs font-semibold text-slate-500">📖 ${t.bookLoc}</span>` : ''}
+                        ${buildFreqBadgeJS(t.examFreq, getFreqTier(t.examFreq), true)}
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-wrap" onclick="event.stopPropagation()">
+                        <button type="button" onclick="toggleMastered('${tid}'); renderLandingUnitsGrid();" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition ${isM ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-emerald-50'}">
+                            ${isM ? '✔ נלמד' : 'סמן כנלמד'}
+                        </button>
+                        <button type="button" onclick="toggleStarred('${tid}'); renderLandingUnitsGrid();" class="px-2 py-1 rounded-lg text-xs font-bold border transition ${isS ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-white text-slate-600 border-slate-200 hover:bg-amber-50'}">
+                            ${isS ? '⭐ מסומן' : '☆'}
+                        </button>
+                        <button type="button" onclick="copyFullProofText('${tid}')" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
+                            📋 העתק
+                        </button>
+                        <button type="button" onclick="showTheorem('${tid}')" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white shadow-2xs transition">
+                            פתח שלבים, הסברים וסימולטור ◀
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            if (displayMode === 'statements-only') {
+                return `
+                    <div id="thm-clean-card-${tid}" onclick="showTheorem('${tid}')" class="cursor-pointer rounded-2xl border-2 ${isM ? 'border-emerald-300 bg-white' : 'border-slate-300 bg-white'} hover:border-indigo-500 hover:shadow-md p-4 sm:p-5 transition group">
+                        ${headerBarHtml}
+                        <div class="space-y-1.5">
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-indigo-700 transition">${formatBidiMathHtml(t.title)}</h4>
+                            <div class="text-sm sm:text-base text-slate-800 leading-relaxed pt-1">${t.statement}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Clean proofs mode: statement box + clean continuous proof box
+            return `
+                <div id="thm-clean-card-${tid}" class="rounded-2xl border-2 ${isM ? 'border-emerald-300 bg-emerald-50/10' : 'border-slate-300 bg-white'} overflow-hidden shadow-2xs hover:shadow-md transition">
+                    <!-- ריבוע 1: המשפט -->
+                    <div class="p-4 sm:p-5 bg-white">
+                        ${headerBarHtml}
+                        <h4 class="text-base sm:text-lg font-extrabold text-slate-900 mb-1.5">${formatBidiMathHtml(t.title)}</h4>
+                        <div class="text-sm sm:text-base font-medium text-slate-900 leading-relaxed">${t.statement}</div>
+                    </div>
+                    <!-- ריבוע 2 צמוד: ההוכחה ברצף נקי (כפי שכותבים במחברת הבחינה) -->
+                    <div class="p-4 sm:p-5 bg-slate-50/70 border-t-2 border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between text-xs font-extrabold text-slate-700">
+                            <span>הוכחה מלאה ברצף (כפי שכותבים במחברת הבחינה):</span>
+                            <button type="button" onclick="copyFullProofText('${tid}')" class="text-indigo-600 hover:underline">📋 העתק הוכחה</button>
+                        </div>
+                        <div class="space-y-1.5 text-slate-900">${pureProofHtml}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        grid.innerHTML = cardsHtml;
         if (window.renderMathInContainer) {
             window.renderMathInContainer(grid);
         }
     }
+    window.renderLandingUnitsGrid = renderLandingUnitsGrid;
 
     function renderFrequencyDashboard() {
         const tids = getActiveTids();
@@ -5769,8 +6224,7 @@ window.SIM_RENDERERS = {
         if (viewName === 'landing') {
             const sec = document.getElementById('section-landing');
             if (sec) sec.classList.remove('hidden');
-            if (hdrTitle) hdrTitle.textContent = 'אינפי 1 — עמוד שער ראשי ומרכז מצבי הלמידה';
-            renderLandingUnitsGrid();
+            setLandingDisplayMode(window.landingDisplayMode || 'clean-proofs');
         } else if (viewName === 'semester-filter') {
             const sec = document.getElementById('section-semester-filter');
             if (sec) sec.classList.remove('hidden');
