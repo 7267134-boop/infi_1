@@ -11,11 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-        <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/fonts/KaTeX_AMS-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -174,18 +170,6 @@
         #pdf-printable-container {
             display: none;
         }
-        body.is-printing-pdf #pdf-printable-container {
-            display: block !important;
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            overflow: auto !important;
-            z-index: 99999 !important;
-            background: #ffffff !important;
-            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        }
         @media print {
             body.is-printing-pdf {
                 background: #ffffff !important;
@@ -196,12 +180,14 @@
             body.is-printing-pdf > *:not(#pdf-printable-container) {
                 display: none !important;
             }
+            body.is-printing-pdf #pdf-printable-container,
+            body.is-printing-pdf #pdf-printable-container * {
+                visibility: visible !important;
+            }
             body.is-printing-pdf #pdf-printable-container {
                 display: block !important;
                 position: static !important;
                 width: 100% !important;
-                height: auto !important;
-                overflow: visible !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #ffffff !important;
@@ -226,64 +212,6 @@
             }
             header, aside, #sidebar, #sidebar-backdrop, .no-print, button {
                 display: none !important;
-            }
-
-            /* Strict MathML suppression across mobile and desktop */
-            .katex-mathml,
-            math,
-            #pdf-printable-container .katex-mathml,
-            #pdf-printable-container math {
-                display: none !important;
-                visibility: hidden !important;
-                width: 0 !important;
-                height: 0 !important;
-                overflow: hidden !important;
-                clip: rect(0, 0, 0, 0) !important;
-            }
-
-            /* Crisp, uniform, LTR KaTeX formulas */
-            #pdf-printable-container .katex {
-                direction: ltr !important;
-                unicode-bidi: isolate !important;
-                display: inline-block !important;
-                font-size: 1.05em !important;
-                line-height: 1.25 !important;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            #pdf-printable-container .katex-html {
-                display: inline-block !important;
-                direction: ltr !important;
-                unicode-bidi: isolate !important;
-                white-space: nowrap !important;
-            }
-            #pdf-printable-container .katex-display {
-                direction: ltr !important;
-                unicode-bidi: isolate !important;
-                display: block !important;
-                margin: 0.6em auto !important;
-                padding: 0.35em 0.5em !important;
-                text-align: center !important;
-            }
-            #pdf-printable-container .katex-display > .katex {
-                display: inline-block !important;
-                text-align: initial !important;
-            }
-            #pdf-printable-container .katex-display > .katex > .katex-html {
-                display: block !important;
-                white-space: nowrap !important;
-            }
-            #pdf-printable-container .math-display {
-                direction: ltr !important;
-                unicode-bidi: isolate !important;
-                margin: 0.6em auto !important;
-                padding: 0.4em 0.8em !important;
-                background: #f8fafc !important;
-                border: 1px solid #cbd5e1 !important;
-                border-radius: 8px !important;
-                text-align: center !important;
             }
         }
     </style>
@@ -4988,7 +4916,6 @@ window.SIM_RENDERERS = {
         const list = window.ORDERED_TIDS.filter(tid => !window.semesterExcludedSet.has(tid));
         return list;
     }
-    window.getActiveTids = getActiveTids;
 
     function loadPersonalState() {
         try {
@@ -5285,11 +5212,10 @@ window.SIM_RENDERERS = {
                 window.renderMathInElement(el, {
                     delimiters: [
                         { left: '$$', right: '$$', display: true },
-                        { left: '\[', right: '\]', display: true },
-                        { left: '\(', right: '\)', display: false },
+                        { left: '\\[', right: '\\]', display: true },
+                        { left: '\\(', right: '\\)', display: false },
                         { left: '$', right: '$', display: false }
                     ],
-                    output: 'html',
                     ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option', 'select'],
                     throwOnError: false,
                     strict: false
@@ -5714,12 +5640,8 @@ window.SIM_RENDERERS = {
     }
     window.renderLandingFilterBar = renderLandingFilterBar;
 
-    async function printContinuousPdf() {
+    function printContinuousPdf() {
         const activeList = getActiveTids();
-        if (!activeList || !activeList.length) {
-            showAppToast('לא נבחרו משפטים להדפסה לפי סינון הסמסטר');
-            return;
-        }
         const totalCount = window.ORDERED_TIDS.length;
         const mode = window.landingDisplayMode || 'clean-proofs';
         const isCleanProofs = (mode !== 'statements-only');
@@ -5732,11 +5654,11 @@ window.SIM_RENDERERS = {
         }
 
         let html = `
-            <div class="print-doc-wrapper font-sans text-slate-900 dir-rtl p-0" dir="rtl" style="font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="print-doc-wrapper font-sans text-slate-900 dir-rtl p-0" dir="rtl" style="font-family: 'Heebo', 'Rubik', sans-serif;">
         `;
 
         // 1. RENDER EACH THEOREM ON ITS OWN DEDICATED PAGE
-        // Starts directly on page 1 with theorem 1 (1.43: אי-שוויון ברנולי), NO repeated header line!
+        // Starts directly on page 1 with theorem 1 (1.43), NO repeated header line!
         activeList.forEach((tid, idx) => {
             const t = window.THEOREMS_DB[tid];
             const semOrd = idx + 1;
@@ -5744,7 +5666,7 @@ window.SIM_RENDERERS = {
             const isFirstPage = (idx === 0);
 
             html += `
-                <div class="print-theorem-page" style="page-break-after: always; break-after: page; padding: 6px 0 14px 0; box-sizing: border-box; font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                <div class="print-theorem-page" style="page-break-after: always; break-after: page; padding: 6px 0 14px 0; box-sizing: border-box;">
                     <div>
                         ${isFirstPage ? `
                             <div style="font-size: 11.5px; font-weight: 800; color: #4338ca; border-bottom: 2px solid #e0e7ff; padding-bottom: 6px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
@@ -5792,7 +5714,7 @@ window.SIM_RENDERERS = {
 
         // 2. THE FINAL PAGE: Comprehensive site explanation & big link to https://infi-1.pages.dev/
         html += `
-            <div class="print-final-page" style="page-break-before: always; break-before: page; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px 15px; box-sizing: border-box; font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div class="print-final-page" style="page-break-before: always; break-before: page; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px 15px; box-sizing: border-box;">
                 <div style="max-width: 680px; width: 100%; border: 3px solid #6366f1; background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%); border-radius: 24px; padding: 36px 32px; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);">
                     <div style="display: inline-block; background-color: #4f46e5; color: #ffffff; padding: 6px 16px; border-radius: 9999px; font-size: 13px; font-weight: 800; margin-bottom: 8px;">
                         חשבון אינפיניטסימלי 1 (20474) • האוניברסיטה הפתוחה
@@ -5801,7 +5723,7 @@ window.SIM_RENDERERS = {
                         האתר הלימודי המלא — אינפי 1
                     </h1>
                     <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 8px 0 16px 0;">
-                        חוברת משפטי ההוכחה הופקה מתוך מאגר ההוכחות והסיכומים המעודכן לבחינות 2015א–2026ב (${activeList.length} מתוך ${totalCount} משפטים פעילים לפי סינון הסמסטר).
+                        חוברת משפטי ההוכחה הופקה מתוך מאגר ההוכחות והסיכומים המעודכן לבחינות 2015א–2026ב (${activeList.length} מתוך ${totalCount} משפטים פעילים).
                     </p>
 
                     <!-- כרטיס הזמנה מקיף לאתר המלא -->
@@ -5848,30 +5770,12 @@ window.SIM_RENDERERS = {
         };
         window.addEventListener('afterprint', cleanUpPrint);
 
-        showAppToast('מכין את המסמך להדפסה / שמירה כ-PDF...');
-
-        // Wait for web fonts and KaTeX fonts
-        if (document.fonts && document.fonts.ready) {
-            try {
-                await document.fonts.ready;
-            } catch (e) {}
-        }
-
-        await new Promise(resolve => {
-            if (window.requestAnimationFrame) {
-                window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
-            } else {
-                setTimeout(resolve, 100);
-            }
-        });
-        await new Promise(resolve => setTimeout(resolve, 300));
-
         showAppToast('פותח חלון הדפסה / שמירה כ-PDF...');
 
         setTimeout(() => {
             window.print();
-            setTimeout(cleanUpPrint, 3500);
-        }, 150);
+            setTimeout(cleanUpPrint, 3000);
+        }, 250);
     }
     window.printContinuousPdf = printContinuousPdf;
 
