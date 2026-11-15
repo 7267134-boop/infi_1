@@ -180,9 +180,13 @@
             body.is-printing-pdf > *:not(#pdf-printable-container) {
                 display: none !important;
             }
-            body.is-printing-pdf #pdf-printable-container,
-            body.is-printing-pdf #pdf-printable-container * {
+            body.is-printing-pdf #pdf-printable-container {
                 visibility: visible !important;
+            }
+            .katex-mathml,
+            #pdf-printable-container .katex-mathml {
+                display: none !important;
+                visibility: hidden !important;
             }
             body.is-printing-pdf #pdf-printable-container {
                 display: block !important;
