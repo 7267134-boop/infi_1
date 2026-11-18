@@ -43,7 +43,19 @@
     /* ==========================================================================
        1. הזרקת סגנונות CSS ייעודיים (Scoped & Glassmorphism)
        ========================================================================== */
-    function injectStyles() {
+        function isMainPage() {
+        try {
+            const path = (window.location.pathname || '').toLowerCase().replace(/\\/g, '/');
+            const segments = path.split('/').filter(Boolean);
+            if (segments.length === 0) return true;
+            const lastSegment = segments[segments.length - 1];
+            return lastSegment === '' || lastSegment === 'index.html' || lastSegment === 'index';
+        } catch (e) {
+            return true;
+        }
+    }
+
+function injectStyles() {
         if (document.getElementById('infi-modals-styles')) return;
 
         const styleEl = document.createElement('style');
@@ -590,6 +602,8 @@
        4. יצירת חלון כניסה ראשונה (Welcome & Roadmap Modal)
        ========================================================================== */
     function createWelcomeModal() {
+        try { localStorage.setItem(STORAGE_KEYS.WELCOME_SHOWN, 'true'); } catch (e) {}
+
         injectStyles();
 
         // הסרת מודאל קיים אם פתוח
@@ -832,6 +846,8 @@
         document.body.appendChild(backdrop);
 
         const closeModal = () => {
+            try { localStorage.setItem(STORAGE_KEYS.WELCOME_SHOWN, 'true'); } catch (e) {}
+
             backdrop.style.opacity = '0';
             backdrop.style.transition = 'opacity 0.25s ease';
             setTimeout(() => backdrop.remove(), 250);
@@ -995,45 +1011,60 @@
        ========================================================================== */
     function evaluateTriggers() {
         try {
+            const isMain = isMainPage();
+            const welcomeShown = localStorage.getItem(STORAGE_KEYS.WELCOME_SHOWN) === 'true';
+
+            // מניעת הקפצה חוזרת בעמודים פנימיים (פרקים, מבחנים, סיכומים)
+            if (!isMain && welcomeShown) {
+                return;
+            }
+
             const now = Date.now();
             let firstVisit = localStorage.getItem(STORAGE_KEYS.FIRST_VISIT);
-            let welcomeShown = localStorage.getItem(STORAGE_KEYS.WELCOME_SHOWN);
             let shareLastShown = localStorage.getItem(STORAGE_KEYS.SHARE_LAST_SHOWN);
             let visitCount = parseInt(localStorage.getItem(STORAGE_KEYS.VISIT_COUNT) || '0', 10);
 
             // ספירת ביקורים
             visitCount++;
-            localStorage.setItem(STORAGE_KEYS.VISIT_COUNT, visitCount.toString());
+            try {
+                localStorage.setItem(STORAGE_KEYS.VISIT_COUNT, visitCount.toString());
+            } catch (e) {}
 
             // האם זהו ביקור ראשון אי-פעם?
             if (!firstVisit) {
-                localStorage.setItem(STORAGE_KEYS.FIRST_VISIT, now.toString());
+                try {
+                    localStorage.setItem(STORAGE_KEYS.FIRST_VISIT, now.toString());
+                } catch (e) {}
                 firstVisit = now;
             } else {
                 firstVisit = parseInt(firstVisit, 10);
             }
 
-            // 1. תרחיש כניסה ראשונה: הצגת חלון ההיכרות וההדרכה
+            // 1. כניסה ראשונה אי-פעם לאתר (בכל עמוד שהוא)
             if (!welcomeShown) {
+                try {
+                    localStorage.setItem(STORAGE_KEYS.WELCOME_SHOWN, 'true');
+                } catch (e) {}
                 setTimeout(() => {
                     createWelcomeModal();
-                }, 1000); // השהייה של שניה לטעינה חלקה של העמוד
+                }, 1000);
                 return;
             }
 
-            // 2. תרחיש משתמש חוזר: בדיקת חלון שיתוף ומאגר הקורסים
-            // דרישת סף מפורשת: חלפה לפחות יממה (24 שעות) מהכניסה הראשונה לאתר!
+            // 2. משתמש חוזר (הקפצת שיתוף 5 ימים) - באופן בלעדי בעמוד הראשי בלבד!
+            if (!isMain) {
+                return;
+            }
+
             const timeSinceFirstVisit = now - firstVisit;
             const isEligibleReturningUser = timeSinceFirstVisit >= ONE_DAY_MS;
 
             if (isEligibleReturningUser) {
                 if (!shareLastShown) {
-                    // הפעם הראשונה שמציגים את חלון השיתוף למשתמש חוזר (לאחר לפחות יממה מהכניסה הראשונה)
                     setTimeout(() => {
                         createShareModal();
                     }, 1400);
                 } else {
-                    // בדיקה האם חלפו לפחות 5 ימים מלאים מהפעם הקודמת שהוצג חלון השיתוף
                     const timeSinceLastShare = now - parseInt(shareLastShown, 10);
                     if (timeSinceLastShare >= FIVE_DAYS_MS) {
                         setTimeout(() => {
