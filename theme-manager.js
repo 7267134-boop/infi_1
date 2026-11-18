@@ -81,4 +81,14 @@
             applyTheme();
         }
     });
+
+    // Auto-load course-modals.js across all pages
+    (function loadCourseModals() {
+        if (document.getElementById('infi-course-modals-script')) return;
+        const s = document.createElement('script');
+        s.id = 'infi-course-modals-script';
+        s.src = 'course-modals.js';
+        s.async = true;
+        document.head.appendChild(s);
+    })();
 })();

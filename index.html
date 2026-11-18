@@ -307,6 +307,7 @@
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e11d48'%3E%3Cpath d='M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.98l-2.83-2.83A5.33 5.33 0 0 0 5.4 6.62C2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53L12 13.02l2.83 2.83c.97.97 2.33 1.53 3.77 1.53 2.98 0 5.4-2.42 5.4-5.38s-2.42-5.38-5.4-5.38zm0 8.76c-1.04 0-2.02-.41-2.76-1.15L13.41 12l2.43-2.23c.74-.74 1.72-1.15 2.76-1.15 2.16 0 3.9 1.74 3.9 3.38s-1.74 3.38-3.9 3.38zm-13.2 0c-2.16 0-3.9-1.74-3.9-3.38s1.74-3.38 3.9-3.38c1.04 0 2.02.41 2.76 1.15L10.59 12l-2.43 2.23c-.74.74-1.72 1.15-2.76 1.15z'/%3E%3C/svg%3E">
     <script src="theme-manager.js"></script>
+    <script src="course-modals.js?v=20261116"></script>
 </head>
 
 <body class="relative flex flex-col justify-between min-h-screen">
@@ -1300,6 +1301,22 @@
         ========================================================================== -->
         <footer class="bg-transparent pb-6 relative z-30 mt-auto">
             <div class="flex flex-col items-center">
+
+                <!-- Quick Access Buttons for Welcome Roadmap & Share Modal -->
+                <div class="flex flex-wrap justify-center items-center gap-3 mb-4">
+                    <button type="button" onclick="(window.showCourseWelcomeModal || window.showInfiWelcomeModal)()"
+                        title="פתיחת מדריך האתר ומפת 6 העמודים"
+                        class="px-4 py-2 rounded-full bg-white/70 backdrop-blur-md border border-sky-200/90 hover:border-sky-500 hover:bg-sky-50 text-sky-800 hover:text-sky-900 text-xs sm:text-sm font-bold transition-all duration-300 shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer">
+                        <span>ℹ️</span>
+                        <span>מדריך ומפת האתר</span>
+                    </button>
+                    <button type="button" onclick="(window.showCourseShareModal || window.showInfiShareModal)()"
+                        title="פתיחת חלון שיתוף הקורס ומאגר הקורסים הראשי"
+                        class="px-4 py-2 rounded-full bg-white/70 backdrop-blur-md border border-blue-200/90 hover:border-blue-500 hover:bg-blue-50 text-blue-800 hover:text-blue-900 text-xs sm:text-sm font-bold transition-all duration-300 shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer">
+                        <span>💙</span>
+                        <span>שיתוף האתר ומאגר הקורסים</span>
+                    </button>
+                </div>
 
                 <!-- Social & Contact Buttons (LinkedIn & WhatsApp ONLY) -->
                 <div class="flex justify-center items-center gap-5 mb-3">
